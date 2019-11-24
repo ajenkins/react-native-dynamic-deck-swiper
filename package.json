@@ -1,0 +1,34 @@
+{
+  "name": "react-native-dynamic-deck-swiper",
+  "version": "0.0.1",
+  "description": "Tinder-like deck swiper React Native component that lets you dynamically set the next card.",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajenkins/react-native-dynamic-deck-swiper.git"
+  },
+  "keywords": [
+    "react-native",
+    "react-native-component",
+    "tinder",
+    "cards",
+    "card",
+    "swipe",
+    "swiper",
+    "deck",
+    "dynamic",
+    "expo"
+  ],
+  "author": "AJ Jenkins",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ajenkins/react-native-dynamic-deck-swiper/issues"
+  },
+  "homepage": "https://github.com/ajenkins/react-native-dynamic-deck-swiper#readme"
+}
