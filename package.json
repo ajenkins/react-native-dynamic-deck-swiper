@@ -34,5 +34,9 @@
   "peerDependencies": {
     "react": "16.x",
     "react-native": "^0.61.5"
+  },
+  "dependencies": {
+    "lodash": "^4.17.15",
+    "prop-types": "^15.7.2"
   }
 }
