@@ -1,3 +1,1 @@
-import MyComponent from './src/swiper';
-
-export default MyComponent;
+export default from './src/swiper';
