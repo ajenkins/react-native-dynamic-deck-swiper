@@ -11,19 +11,19 @@ npm install react-native-dynamic-deck-swiper --save
 
 ## Overview
 
-* [x] (NEW) Dynamically set next card
-* [x] Rotation animation
-* [x] Opacity animation
-* [x] Zoom animation
-* [x] Overlay labels
-* [x] Show next card while swiping
-* [x] Swipe event callbacks
-* [x] Trigger swipe animations programmatically
-* [x] Jump to a card index
-* [x] Swipe to previous card
-* [x] Underlaying cards offset
-* [x] Never-ending, animated deck when infinite property is true
-* [x] Swipe back to previous card with a custom animation
+- [x] (NEW) Dynamically set next card
+- [x] Rotation animation
+- [x] Opacity animation
+- [x] Zoom animation
+- [x] Overlay labels
+- [x] Show next card while swiping
+- [x] Swipe event callbacks
+- [x] Trigger swipe animations programmatically
+- [x] Jump to a card index
+- [x] Swipe to previous card
+- [x] Underlaying cards offset
+- [x] Never-ending, animated deck when infinite property is true
+- [x] Swipe back to previous card with a custom animation
 
 ## Preview
 
@@ -34,18 +34,18 @@ npm install react-native-dynamic-deck-swiper --save
 
 ### Card props
 
-| Props           | type           | description                                                          | required | default |
-| :-------------- | :------------- | :------------------------------------------------------------------- | :------- | :------ |
-| cards           | array          | array of data for the cards to be rendered                           |          |
-| nextCard        | func({first, left, right, previousCards}) | return value is passed to renderCard as cardData for the next card |          |
-| renderCard      | func(cardData, cardIndex) | function to render the card based on the data                        | required |
-| keyExtractor    | func(cardData) | function to get the card's react key                                 |          | null    |
-| cardIndex       | number         | cardIndex to start with                                              |          | 0       |
-| infinite        | bool           | keep swiping indefinitely                                            |          | false   |
-| horizontalSwipe | bool           | enable/disable horizontal swiping                                    |          | true    |
-| verticalSwipe   | bool           | enable/disable vertical swiping                                      |          | true    |
-| showSecondCard  | bool           | enable/disable second card while swiping                             |          | true    |
-| stackSize       | number         | number of underlaying cards to show (showSecondCard must be enabled) |          | 0       |
+| Props           | type                                      | description                                                          | required | default |
+| :-------------- | :---------------------------------------- | :------------------------------------------------------------------- | :------- | :------ |
+| cards           | array                                     | array of data for the cards to be rendered                           |          |
+| nextCard        | func({first, left, right, previousCards}) | return value is passed to renderCard as cardData for the next card   |          |
+| renderCard      | func(cardData, cardIndex)                 | function to render the card based on the data                        | required |
+| keyExtractor    | func(cardData)                            | function to get the card's react key                                 |          | null    |
+| cardIndex       | number                                    | cardIndex to start with                                              |          | 0       |
+| infinite        | bool                                      | keep swiping indefinitely                                            |          | false   |
+| horizontalSwipe | bool                                      | enable/disable horizontal swiping                                    |          | true    |
+| verticalSwipe   | bool                                      | enable/disable vertical swiping                                      |          | true    |
+| showSecondCard  | bool                                      | enable/disable second card while swiping                             |          | true    |
+| stackSize       | number                                    | number of underlaying cards to show (showSecondCard must be enabled) |          | 0       |
 
 ### Event callbacks
 
@@ -59,8 +59,8 @@ npm install react-native-dynamic-deck-swiper --save
 | onSwipedTop       | func   | function to be called when a card is swiped top. it receives the swiped card index    |         | (cardIndex) => {} |
 | onSwipedBottom    | func   | function to be called when a card is swiped bottom. it receives the swiped card index |         | (cardIndex) => {} |
 | onSwiping         | func   | function to be called when a card is being moved. it receives X and Y positions       |         | (x, y) => {} |
-| dragStart         | func   | function to be called when drag start                                       |        |
-| dragEnd           | func   | function to be called when drag end
+| dragStart         | func   | function to be called when drag start                                                 |         |
+| dragEnd           | func   | function to be called when drag end                                                   |
 | onTapCard         | func   | function to be called when tapping a card. it receives the tapped card index          |         | (cardIndex) => {} |
 | onTapCardDeadZone | number | maximum amount of movement before a tap is no longer recognized as a tap              | 5       |
 
@@ -236,42 +236,43 @@ Make sure you set showSecondCard={false} for smoother and proper transitions whi
 
 ### Style props
 
-| Props                | type   | description                                        | default   |
-| :------------------- | :----- | :------------------------------------------------- | :-------- |
-| backgroundColor      | string | background color for the view containing the cards | '#4FD0E9' |
-| marginTop            | number | marginTop for the swiper container                 | 0         |
-| marginBottom         | number | marginBottom for the swiper container              | 0         |
-| cardVerticalMargin   | number | card vertical margin                               | 60        |
-| cardHorizontalMargin | number | card horizontal margin                             | 20        |
-| childrenOnTop        | bool   | render children on top or not                      | false     |
-| cardStyle            | node   | override swipable card style                       | {}        |
-| containerStyle       | node   | overrides for the containing <View> style          | {}        |
-| pointerEvents        | string | pointerEvents prop for the containing <View>       | 'auto'    |
-| useViewOverflow      | bool   | use ViewOverflow instead of View for the Swiper component |  true     |
+| Props                | type   | description                                               | default   |
+| :------------------- | :----- | :-------------------------------------------------------- | :-------- |
+| backgroundColor      | string | background color for the view containing the cards        | '#4FD0E9' |
+| marginTop            | number | marginTop for the swiper container                        | 0         |
+| marginBottom         | number | marginBottom for the swiper container                     | 0         |
+| cardVerticalMargin   | number | card vertical margin                                      | 60        |
+| cardHorizontalMargin | number | card horizontal margin                                    | 20        |
+| childrenOnTop        | bool   | render children on top or not                             | false     |
+| cardStyle            | node   | override swipable card style                              | {}        |
+| containerStyle       | node   | overrides for the containing <View> style                 | {}        |
+| pointerEvents        | string | pointerEvents prop for the containing <View>              | 'auto'    |
+| useViewOverflow      | bool   | use ViewOverflow instead of View for the Swiper component | true      |
 
 ### Swipe back method info
+
 ## Method
 
-| Name                | type   | description                                        |
-| :------------------- | :----- | :------------------------------------------------- |
-| swipeBack       | callback                       | swipe back into deck last swiped card |
+| Name      | type     | description                           |
+| :-------- | :------- | :------------------------------------ |
+| swipeBack | callback | swipe back into deck last swiped card |
 
 ## Props
 
-| Props                | type   | description                                        | default   |
-| :------------------- | :----- | :------------------------------------------------- | :-------- |
-| previousCardDefaultPositionX | number | Animation start position oX when card swipes back into deck | -width |
+| Props                        | type   | description                                                 | default |
+| :--------------------------- | :----- | :---------------------------------------------------------- | :------ |
+| previousCardDefaultPositionX | number | Animation start position oX when card swipes back into deck | -width  |
 | previousCardDefaultPositionY | number | Animation start position oY when card swipes back into deck | -height |
-| stackAnimationFriction | number | spring animation friction (bounciness)                 | 7       |
-| stackAnimationTension  | number | spring animation tension (speed)                       | 40      |
-| stackAnimationTension  | number | spring animation tension (speed)                       | 40      |
-| swipeBackCard  | bool | renders swipe back card, in order to animate it                       | false      |
+| stackAnimationFriction       | number | spring animation friction (bounciness)                      | 7       |
+| stackAnimationTension        | number | spring animation tension (speed)                            | 40      |
+| stackAnimationTension        | number | spring animation tension (speed)                            | 40      |
+| swipeBackCard                | bool   | renders swipe back card, in order to animate it             | false   |
 
 ### Methods
 
 To trigger imperative animations, you can use a reference to the Swiper component.
 
-| Name           | arguments                      | description                   |
+| Name            | arguments                      | description                   |
 | :-------------- | :----------------------------- | :---------------------------- |
 | swipeLeft       | mustDecrementCardIndex = false | swipe left to the next card   |
 | swipeRight      | mustDecrementCardIndex = false | swipe right to the next card  |
@@ -329,43 +330,41 @@ Demo inside the [example Folder](https://github.com/ajenkins/react-native-deck-s
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5FCFF"
+    backgroundColor: '#F5FCFF'
   },
   card: {
     flex: 1,
     borderRadius: 4,
     borderWidth: 2,
-    borderColor: "#E8E8E8",
-    justifyContent: "center",
-    backgroundColor: "white"
+    borderColor: '#E8E8E8',
+    justifyContent: 'center',
+    backgroundColor: 'white'
   },
   text: {
-    textAlign: "center",
+    textAlign: 'center',
     fontSize: 50,
-    backgroundColor: "transparent"
+    backgroundColor: 'transparent'
   }
 });
 ```
 
 ## Development
 
-If you've encountered issues while running the example app located in the _Example_ folder, try the following steps:
+### Running the example Expo app
 
-**If you're using yarn**
-1. rm -rf node_modules && rm yarn.lock
-2. yarn cache clean
-3. yarn
-4. react-native run-ios
-5. react-native run-android
+1. `cd example/`
+1. `npm install`
+1. `npm start`
 
-**If you're using npm**
-1. rm -rf node_modules && rm package-lock.json
-2. npm cache clean --force
-3. npm install
-4. react-native run-ios
-5. react-native run-android
+You can change the example code by editing App.js
 
-**If bundler doesn't automatically start**
-Simply run _yarn start_ or _npm start_ in the Example folder.
+For specific usage info, see the [Expo CLI docs](https://docs.expo.io/versions/latest/workflow/expo-cli/).
+
+### Updating the Swiper component
+
+1. Make edits to the code in the src/ directory.
+1. From the root project directory, above example/, run `npm pack`.
+1. In the example/ directory, run `npm install`. This should update package-lock.json.
+1. Then run `npm start`.
 
 Don't forget to bump project and example versions in package.json whenever you submit a PR.
