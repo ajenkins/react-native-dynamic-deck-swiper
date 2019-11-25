@@ -1,11 +1,20 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import MyComponent from 'react-native-dynamic-deck-swiper';
+import Swiper from 'react-native-dynamic-deck-swiper';
+
+const cards = ['YOU', 'SHOULD', 'HAVE', 'BOUGHT', 'A', 'SQUIRREL'];
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <MyComponent />
+      <Swiper
+        cards={cards}
+        renderCard={(card) => (
+          <View style={styles.card}>
+            <Text style={styles.text}>{card}</Text>
+          </View>
+        )}
+      />
     </View>
   );
 }
@@ -13,8 +22,19 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
+    backgroundColor: '#F5FCFF'
+  },
+  card: {
+    flex: 1,
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: '#E8E8E8',
+    justifyContent: 'center',
+    backgroundColor: 'white'
+  },
+  text: {
+    textAlign: 'center',
+    fontSize: 50,
+    backgroundColor: 'transparent'
   }
 });
