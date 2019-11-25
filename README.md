@@ -368,3 +368,4 @@ For specific usage info, see the [Expo CLI docs](https://docs.expo.io/versions/l
 1. Then run `npm start`.
 
 Don't forget to bump project and example versions in package.json whenever you submit a PR.
+Also, please delete all outdated .tgz files. Only the latest version should be kept in source control.
