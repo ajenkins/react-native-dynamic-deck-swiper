@@ -8,7 +8,13 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Swiper
-        cards={cards}
+        nextCard={({ first, left, right, previousCards }) => {
+          if (first) {
+            return 'This is the first card';
+          } else {
+            return 'There are a lot of these cards';
+          }
+        }}
         renderCard={(card) => (
           <View style={styles.card}>
             <Text style={styles.text}>{card}</Text>

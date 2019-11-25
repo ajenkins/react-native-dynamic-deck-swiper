@@ -364,7 +364,8 @@ For specific usage info, see the [Expo CLI docs](https://docs.expo.io/versions/l
 
 1. Make edits to the code in the src/ directory.
 1. From the root project directory, above example/, run `npm pack`.
-1. In the example/ directory, run `npm install`. This should update package-lock.json.
+1. In the example/ directory, run `npm install ../react-native-dynamic-deck-swiper-X.Y.Z.tgz`
+   where `X.Y.Z` is the current version of the file. This should update package-lock.json.
 1. Then run `npm start`.
 
 Don't forget to bump project and example versions in package.json whenever you submit a PR.

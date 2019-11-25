@@ -515,11 +515,14 @@ class Swiper extends Component {
         ]).start();
       }
 
-      if (index === cards.length - 1) {
-        if (!infinite) break;
-        index = 0;
-      } else {
+      if (infinite) {
         index++;
+      } else {
+        if (index === cards.length - 1) {
+          break;
+        } else {
+          index++;
+        }
       }
     }
   };
@@ -795,9 +798,21 @@ class Swiper extends Component {
   };
 
   pushCardToStack = (renderedCards, index, position, key, firstCard) => {
-    const { cards } = this.props;
+    const { cards, nextCard } = this.props;
     const stackCardZoomStyle = this.calculateStackCardZoomStyle(position);
-    const stackCard = this.props.renderCard(cards[index], index);
+    let nextCardData;
+    if (nextCard) {
+      // TODO: Get correct values for left, right, and previousCards
+      nextCardData = nextCard({
+        first: firstCard,
+        left: false,
+        right: false,
+        previousCards: []
+      });
+    } else {
+      nextCardData = cards[index];
+    }
+    const stackCard = this.props.renderCard(nextCardData, index);
     const swipableCardStyle = this.calculateSwipableCardStyle();
     const renderOverlayLabel = this.renderOverlayLabel();
     renderedCards.push(
@@ -907,7 +922,7 @@ Swiper.propTypes = {
   cardIndex: PropTypes.number,
   cardStyle: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
   cardVerticalMargin: PropTypes.number,
-  cards: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
+  cards: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   containerStyle: PropTypes.object,
   children: PropTypes.any,
   childrenOnTop: PropTypes.bool,
@@ -933,6 +948,7 @@ Swiper.propTypes = {
   keyExtractor: PropTypes.func,
   marginBottom: PropTypes.number,
   marginTop: PropTypes.number,
+  nextCard: PropTypes.func,
   onSwiped: PropTypes.func,
   onSwipedAborted: PropTypes.func,
   onSwipedAll: PropTypes.func,
@@ -995,7 +1011,7 @@ Swiper.defaultProps = {
   goBackToPreviousCardOnSwipeLeft: false,
   goBackToPreviousCardOnSwipeRight: false,
   goBackToPreviousCardOnSwipeTop: false,
-  infinite: false,
+  infinite: true,
   inputCardOpacityRangeX: [-width / 2, -width / 3, 0, width / 3, width / 2],
   inputCardOpacityRangeY: [-height / 2, -height / 3, 0, height / 3, height / 2],
   inputOverlayLabelsOpacityRangeX: [
