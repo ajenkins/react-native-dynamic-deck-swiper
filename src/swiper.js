@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import { PanResponder, Text, View, Dimensions, Animated } from "react-native";
-import PropTypes from "prop-types";
-import isEqual from "lodash/isEqual";
+import React, { Component } from 'react';
+import { PanResponder, Text, View, Dimensions, Animated } from 'react-native';
+import PropTypes from 'prop-types';
+import isEqual from 'lodash/isEqual';
 
-import styles from "./styles";
+import styles from './styles';
 
-const { height, width } = Dimensions.get("window");
+const { height, width } = Dimensions.get('window');
 const LABEL_TYPES = {
-  NONE: "none",
-  LEFT: "left",
-  RIGHT: "right",
-  TOP: "top",
-  BOTTOM: "bottom"
+  NONE: 'none',
+  LEFT: 'left',
+  RIGHT: 'right',
+  TOP: 'top',
+  BOTTOM: 'bottom'
 };
 const SWIPE_MULTIPLY_FACTOR = 4.5;
 
@@ -24,7 +24,7 @@ const calculateCardIndexes = (firstCardIndex, cards) => {
   return { firstCardIndex, secondCardIndex, previousCardIndex };
 };
 
-const rebuildStackAnimatedValues = props => {
+const rebuildStackAnimatedValues = (props) => {
   const stackPositionsAndScales = {};
   const { stackSize, stackSeparation, stackScale } = props;
 
@@ -63,8 +63,12 @@ class Swiper extends Component {
     this._animatedValueX = 0;
     this._animatedValueY = 0;
 
-    this.state.pan.x.addListener(value => (this._animatedValueX = value.value));
-    this.state.pan.y.addListener(value => (this._animatedValueY = value.value));
+    this.state.pan.x.addListener(
+      (value) => (this._animatedValueX = value.value)
+    );
+    this.state.pan.y.addListener(
+      (value) => (this._animatedValueY = value.value)
+    );
 
     this.initializeCardStyle();
     this.initializePanResponder();
@@ -88,11 +92,11 @@ class Swiper extends Component {
     this._mounted = false;
     this.state.pan.x.removeAllListeners();
     this.state.pan.y.removeAllListeners();
-    Dimensions.removeEventListener("change", this.onDimensionsChange);
+    Dimensions.removeEventListener('change', this.onDimensionsChange);
   };
 
   getCardStyle = () => {
-    const { height, width } = Dimensions.get("window");
+    const { height, width } = Dimensions.get('window');
     const {
       cardVerticalMargin,
       cardHorizontalMargin,
@@ -114,7 +118,7 @@ class Swiper extends Component {
 
   initializeCardStyle = () => {
     // this.forceUpdate()
-    Dimensions.addEventListener("change", this.onDimensionsChange);
+    Dimensions.addEventListener('change', this.onDimensionsChange);
   };
 
   initializePanResponder = () => {
@@ -354,7 +358,7 @@ class Swiper extends Component {
     return { isSwipingLeft, isSwipingRight, isSwipingTop, isSwipingBottom };
   };
 
-  resetTopCard = cb => {
+  resetTopCard = (cb) => {
     Animated.spring(this.state.pan, {
       toValue: 0,
       friction: this.props.topCardResetAnimationFriction,
@@ -369,7 +373,7 @@ class Swiper extends Component {
     this.props.onSwipedAborted();
   };
 
-  swipeBack = cb => {
+  swipeBack = (cb) => {
     const { swipeBackXYPositions, isSwipingBack } = this.state;
     const { infinite } = this.props;
     const canSwipeBack =
@@ -520,7 +524,7 @@ class Swiper extends Component {
     }
   };
 
-  incrementCardIndex = onSwiped => {
+  incrementCardIndex = (onSwiped) => {
     const { firstCardIndex } = this.state;
     const { infinite } = this.props;
     let newCardIndex = firstCardIndex + 1;
@@ -545,7 +549,7 @@ class Swiper extends Component {
     this.setCardIndex(newCardIndex, swipedAllCards);
   };
 
-  decrementCardIndex = cb => {
+  decrementCardIndex = (cb) => {
     const { firstCardIndex } = this.state;
     const lastCardIndex = this.state.cards.length - 1;
     const previousCardIndex = firstCardIndex - 1;
@@ -557,13 +561,13 @@ class Swiper extends Component {
     this.setCardIndex(newCardIndex, false);
   };
 
-  jumpToCardIndex = newCardIndex => {
+  jumpToCardIndex = (newCardIndex) => {
     if (this.state.cards[newCardIndex]) {
       this.setCardIndex(newCardIndex, false);
     }
   };
 
-  onSwipedCallbacks = swipeDirectionCallback => {
+  onSwipedCallbacks = (swipeDirectionCallback) => {
     const previousCardIndex = this.state.firstCardIndex;
     this.props.onSwiped(previousCardIndex, this.state.cards[previousCardIndex]);
 
@@ -659,7 +663,7 @@ class Swiper extends Component {
     ];
   };
 
-  calculateStackCardZoomStyle = position => [
+  calculateStackCardZoomStyle = (position) => [
     styles.card,
     this.getCardStyle(),
     {
@@ -950,7 +954,7 @@ Swiper.propTypes = {
   overlayLabelWrapperStyle: PropTypes.object,
   overlayOpacityHorizontalThreshold: PropTypes.number,
   overlayOpacityVerticalThreshold: PropTypes.number,
-  pointerEvents: PropTypes.oneOf(["box-none", "none", "box-only", "auto"]),
+  pointerEvents: PropTypes.oneOf(['box-none', 'none', 'box-only', 'auto']),
   previousCardDefaultPositionX: PropTypes.number,
   previousCardDefaultPositionY: PropTypes.number,
   renderCard: PropTypes.func.isRequired,
@@ -974,7 +978,7 @@ Swiper.propTypes = {
 Swiper.defaultProps = {
   animateCardOpacity: false,
   animateOverlayLabelsOpacity: false,
-  backgroundColor: "#4FD0E9",
+  backgroundColor: '#4FD0E9',
   cardHorizontalMargin: 20,
   cardIndex: 0,
   cardStyle: {},
@@ -1012,40 +1016,40 @@ Swiper.defaultProps = {
   keyExtractor: null,
   marginBottom: 0,
   marginTop: 0,
-  onSwiped: cardIndex => {},
+  onSwiped: (cardIndex) => {},
   onSwipedAborted: () => {},
   onSwipedAll: () => {},
-  onSwipedBottom: cardIndex => {},
-  onSwipedLeft: cardIndex => {},
-  onSwipedRight: cardIndex => {},
-  onSwipedTop: cardIndex => {},
+  onSwipedBottom: (cardIndex) => {},
+  onSwipedLeft: (cardIndex) => {},
+  onSwipedRight: (cardIndex) => {},
+  onSwipedTop: (cardIndex) => {},
   onSwiping: () => {},
-  onTapCard: cardIndex => {},
+  onTapCard: (cardIndex) => {},
   onTapCardDeadZone: 5,
   outputCardOpacityRangeX: [0.8, 1, 1, 1, 0.8],
   outputCardOpacityRangeY: [0.8, 1, 1, 1, 0.8],
   outputOverlayLabelsOpacityRangeX: [1, 0, 0, 0, 1],
   outputOverlayLabelsOpacityRangeY: [1, 0, 0, 0, 1],
-  outputRotationRange: ["-10deg", "0deg", "10deg"],
+  outputRotationRange: ['-10deg', '0deg', '10deg'],
   overlayLabels: null,
   overlayLabelStyle: {
     fontSize: 45,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     borderRadius: 10,
     padding: 10,
-    overflow: "hidden"
+    overflow: 'hidden'
   },
   overlayLabelWrapperStyle: {
-    position: "absolute",
-    backgroundColor: "transparent",
+    position: 'absolute',
+    backgroundColor: 'transparent',
     zIndex: 2,
     flex: 1,
-    width: "100%",
-    height: "100%"
+    width: '100%',
+    height: '100%'
   },
   overlayOpacityHorizontalThreshold: width / 4,
   overlayOpacityVerticalThreshold: height / 5,
-  pointerEvents: "auto",
+  pointerEvents: 'auto',
   previousCardDefaultPositionX: -width,
   previousCardDefaultPositionY: -height,
   secondCardZoom: 0.97,
