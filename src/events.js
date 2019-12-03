@@ -17,10 +17,9 @@ export const onPanResponderMove = (
     overlayOpacityHorizontalThreshold,
     overlayOpacityVerticalThreshold
   },
+  { pan: { x: panX, y: panY } },
   animatedValueX,
-  animatedValueY,
-  panX,
-  panY
+  animatedValueY
 ) => (event, gestureState) => {
   onSwiping(animatedValueX, animatedValueY);
 
@@ -76,4 +75,100 @@ export const onPanResponderMove = (
       createAnimatedEvent(horizontalSwipe, verticalSwipe, panX, panY)
     ])(event, gestureState)
   ];
+};
+
+export const onPanResponderGrant = (
+  { dragStart },
+  { pan, panResponderLocked },
+  animatedValueX,
+  animatedValueY
+) => (event, gestureState) => {
+  dragStart && dragStart();
+  if (!panResponderLocked) {
+    pan.setOffset({
+      x: animatedValueX,
+      y: animatedValueY
+    });
+  }
+
+  pan.setValue({
+    x: 0,
+    y: 0
+  });
+};
+
+validPanResponderRelease = (
+  { disableBottomSwipe, disableLeftSwipe, disableRightSwipe, disableTopSwipe },
+  { isSwipingLeft, isSwipingRight, isSwipingTop, isSwipingBottom }
+) => {
+  // const {
+  //   isSwipingLeft,
+  //   isSwipingRight,
+  //   isSwipingTop,
+  //   isSwipingBottom
+  // } = this.getSwipeDirection(this._animatedValueX, this._animatedValueY);
+
+  return (
+    (isSwipingLeft && !disableLeftSwipe) ||
+    (isSwipingRight && !disableRightSwipe) ||
+    (isSwipingTop && !disableTopSwipe) ||
+    (isSwipingBottom && !disableBottomSwipe)
+  );
+};
+
+export const onPanResponderRelease = (
+  { dragEnd, horizontalThreshold, verticalThreshold, onTapCard } = props,
+  { firstCardIndex, pan, panResponderLocked, slideGesture },
+  _animatedValueX,
+  _animatedValueY,
+  getOnSwipeDirectionCallback,
+  getSwipeDirection,
+  resetTopCard,
+  setState,
+  swipeCard
+) => (e, gestureState) => {
+  dragEnd && dragEnd();
+  if (panResponderLocked) {
+    tpan.setValue({
+      x: 0,
+      y: 0
+    });
+    pan.setOffset({
+      x: 0,
+      y: 0
+    });
+    return;
+  }
+
+  const animatedValueX = Math.abs(_animatedValueX);
+  const animatedValueY = Math.abs(_animatedValueY);
+
+  const isSwiping =
+    animatedValueX > horizontalThreshold || animatedValueY > verticalThreshold;
+
+  if (
+    isSwiping &&
+    validPanResponderRelease(
+      props,
+      getSwipeDirection(_animatedValueX, _animatedValueY)
+    )
+  ) {
+    const onSwipeDirectionCallback = getOnSwipeDirectionCallback(
+      _animatedValueX,
+      _animatedValueY
+    );
+
+    swipeCard(onSwipeDirectionCallback);
+  } else {
+    resetTopCard();
+  }
+
+  if (!slideGesture) {
+    onTapCard(firstCardIndex);
+  }
+
+  setState({
+    labelType: LABEL_TYPES.NONE,
+    slideGesture: false
+  });
 };

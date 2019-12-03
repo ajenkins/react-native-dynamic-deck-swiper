@@ -52,10 +52,14 @@ class Swiper extends Component {
     initializeCardStyle(onDimensionsChange(this.forceUpdate));
     this._panResponder = initializePanResponder(
       this.props,
+      this.state,
       this._animatedValueX,
       this._animatedValueY,
-      this.state.pan.x,
-      this.state.pan.y
+      this.getOnSwipeDirectionCallback,
+      this.getSwipeDirection,
+      this.resetTopCard,
+      this.setState,
+      this.swipeCard
     );
   }
 
@@ -81,89 +85,6 @@ class Swiper extends Component {
       'change',
       onDimensionsChange(this.forceUpdate)
     );
-  };
-
-  onPanResponderGrant = (event, gestureState) => {
-    this.props.dragStart && this.props.dragStart();
-    if (!this.state.panResponderLocked) {
-      this.state.pan.setOffset({
-        x: this._animatedValueX,
-        y: this._animatedValueY
-      });
-    }
-
-    this.state.pan.setValue({
-      x: 0,
-      y: 0
-    });
-  };
-
-  validPanResponderRelease = () => {
-    const {
-      disableBottomSwipe,
-      disableLeftSwipe,
-      disableRightSwipe,
-      disableTopSwipe
-    } = this.props;
-
-    const {
-      isSwipingLeft,
-      isSwipingRight,
-      isSwipingTop,
-      isSwipingBottom
-    } = this.getSwipeDirection(this._animatedValueX, this._animatedValueY);
-
-    return (
-      (isSwipingLeft && !disableLeftSwipe) ||
-      (isSwipingRight && !disableRightSwipe) ||
-      (isSwipingTop && !disableTopSwipe) ||
-      (isSwipingBottom && !disableBottomSwipe)
-    );
-  };
-
-  onPanResponderRelease = (e, gestureState) => {
-    this.props.dragEnd && this.props.dragEnd();
-    if (this.state.panResponderLocked) {
-      this.state.pan.setValue({
-        x: 0,
-        y: 0
-      });
-      this.state.pan.setOffset({
-        x: 0,
-        y: 0
-      });
-
-      return;
-    }
-
-    const { horizontalThreshold, verticalThreshold } = this.props;
-
-    const animatedValueX = Math.abs(this._animatedValueX);
-    const animatedValueY = Math.abs(this._animatedValueY);
-
-    const isSwiping =
-      animatedValueX > horizontalThreshold ||
-      animatedValueY > verticalThreshold;
-
-    if (isSwiping && this.validPanResponderRelease()) {
-      const onSwipeDirectionCallback = this.getOnSwipeDirectionCallback(
-        this._animatedValueX,
-        this._animatedValueY
-      );
-
-      this.swipeCard(onSwipeDirectionCallback);
-    } else {
-      this.resetTopCard();
-    }
-
-    if (!this.state.slideGesture) {
-      this.props.onTapCard(this.state.firstCardIndex);
-    }
-
-    this.setState({
-      labelType: LABEL_TYPES.NONE,
-      slideGesture: false
-    });
   };
 
   getOnSwipeDirectionCallback = (animatedValueX, animatedValueY) => {

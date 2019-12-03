@@ -1,6 +1,10 @@
 import { Dimensions, PanResponder } from 'react-native';
 
-import { onPanResponderMove } from './events';
+import {
+  onPanResponderMove,
+  onPanResponderGrant,
+  onPanResponderRelease
+} from './events';
 
 export const initializeCardStyle = (onDimensionsChange) => {
   Dimensions.addEventListener('change', onDimensionsChange);
@@ -8,10 +12,14 @@ export const initializeCardStyle = (onDimensionsChange) => {
 
 export const initializePanResponder = (
   props,
+  state,
   animatedValueX,
   animatedValueY,
-  panX,
-  panY
+  getOnSwipeDirectionCallback,
+  getSwipeDirection,
+  resetTopCard,
+  setState,
+  swipeCard
 ) => {
   return PanResponder.create({
     onStartShouldSetPanResponder: (event, gestureState) => true,
@@ -29,15 +37,29 @@ export const initializePanResponder = (
         10
       );
     },
-    onPanResponderGrant: this.onPanResponderGrant,
+    onPanResponderGrant: onPanResponderGrant(
+      props,
+      state,
+      animatedValueX,
+      animatedValueY
+    ),
     onPanResponderMove: onPanResponderMove(
       props,
+      state,
+      animatedValueX,
+      animatedValueY
+    ),
+    onPanResponderRelease: onPanResponderRelease(
+      props,
+      state,
       animatedValueX,
       animatedValueY,
-      panX,
-      panY
+      getOnSwipeDirectionCallback,
+      getSwipeDirection,
+      resetTopCard,
+      setState,
+      swipeCard
     ),
-    onPanResponderRelease: this.onPanResponderRelease,
     onPanResponderTerminate: this.onPanResponderRelease
   });
 };
