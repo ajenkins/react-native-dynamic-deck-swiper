@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   card: {
@@ -63,5 +63,24 @@ const styles = StyleSheet.create({
     marginLeft: -30
   }
 });
+
+export const getCardStyle = ({
+  cardVerticalMargin,
+  cardHorizontalMargin,
+  marginTop,
+  marginBottom
+}) => {
+  const { height, width } = Dimensions.get('window');
+
+  const cardWidth = width - cardHorizontalMargin * 2;
+  const cardHeight = height - cardVerticalMargin * 2 - marginTop - marginBottom;
+
+  return {
+    top: cardVerticalMargin,
+    left: cardHorizontalMargin,
+    width: cardWidth,
+    height: cardHeight
+  };
+};
 
 export default styles;

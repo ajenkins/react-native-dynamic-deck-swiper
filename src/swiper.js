@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { PanResponder, Text, View, Dimensions, Animated } from 'react-native';
+import { Text, View, Dimensions, Animated } from 'react-native';
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
 
-import styles from './styles';
+import { rebuildStackAnimatedValues } from './animations';
+import { calculateCardIndexes } from './calculations';
+import { initializeCardStyle, initializePanResponder } from './initializers';
+import styles, { getCardStyle } from './styles';
 
 const { height, width } = Dimensions.get('window');
 const LABEL_TYPES = {
@@ -14,31 +17,6 @@ const LABEL_TYPES = {
   BOTTOM: 'bottom'
 };
 const SWIPE_MULTIPLY_FACTOR = 4.5;
-
-const calculateCardIndexes = (firstCardIndex, cards) => {
-  firstCardIndex = firstCardIndex || 0;
-  const previousCardIndex =
-    firstCardIndex === 0 ? cards.length - 1 : firstCardIndex - 1;
-  const secondCardIndex =
-    firstCardIndex === cards.length - 1 ? 0 : firstCardIndex + 1;
-  return { firstCardIndex, secondCardIndex, previousCardIndex };
-};
-
-const rebuildStackAnimatedValues = (props) => {
-  const stackPositionsAndScales = {};
-  const { stackSize, stackSeparation, stackScale } = props;
-
-  for (let position = 0; position < stackSize; position++) {
-    stackPositionsAndScales[`stackPosition${position}`] = new Animated.Value(
-      stackSeparation * position
-    );
-    stackPositionsAndScales[`stackScale${position}`] = new Animated.Value(
-      (100 - stackScale * position) * 0.01
-    );
-  }
-
-  return stackPositionsAndScales;
-};
 
 class Swiper extends Component {
   constructor(props) {
@@ -70,8 +48,8 @@ class Swiper extends Component {
       (value) => (this._animatedValueY = value.value)
     );
 
-    this.initializeCardStyle();
-    this.initializePanResponder();
+    initializeCardStyle(this.onDimensionsChange);
+    this._panResponder = initializePanResponder();
   }
 
   shouldComponentUpdate = (nextProps, nextState) => {
@@ -93,57 +71,6 @@ class Swiper extends Component {
     this.state.pan.x.removeAllListeners();
     this.state.pan.y.removeAllListeners();
     Dimensions.removeEventListener('change', this.onDimensionsChange);
-  };
-
-  getCardStyle = () => {
-    const { height, width } = Dimensions.get('window');
-    const {
-      cardVerticalMargin,
-      cardHorizontalMargin,
-      marginTop,
-      marginBottom
-    } = this.props;
-
-    const cardWidth = width - cardHorizontalMargin * 2;
-    const cardHeight =
-      height - cardVerticalMargin * 2 - marginTop - marginBottom;
-
-    return {
-      top: cardVerticalMargin,
-      left: cardHorizontalMargin,
-      width: cardWidth,
-      height: cardHeight
-    };
-  };
-
-  initializeCardStyle = () => {
-    // this.forceUpdate()
-    Dimensions.addEventListener('change', this.onDimensionsChange);
-  };
-
-  initializePanResponder = () => {
-    this._panResponder = PanResponder.create({
-      onStartShouldSetPanResponder: (event, gestureState) => true,
-      onMoveShouldSetPanResponder: (event, gestureState) => false,
-
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
-        const isVerticalSwipe = Math.sqrt(
-          Math.pow(gestureState.dx, 2) < Math.pow(gestureState.dy, 2)
-        );
-        if (!this.props.verticalSwipe && isVerticalSwipe) {
-          return false;
-        }
-        return (
-          Math.sqrt(
-            Math.pow(gestureState.dx, 2) + Math.pow(gestureState.dy, 2)
-          ) > 10
-        );
-      },
-      onPanResponderGrant: this.onPanResponderGrant,
-      onPanResponderMove: this.onPanResponderMove,
-      onPanResponderRelease: this.onPanResponderRelease,
-      onPanResponderTerminate: this.onPanResponderRelease
-    });
   };
 
   createAnimatedEvent = () => {
@@ -652,7 +579,7 @@ class Swiper extends Component {
 
     return [
       styles.card,
-      this.getCardStyle(),
+      getCardStyle(this.props),
       {
         zIndex: 1,
         opacity: opacity,
@@ -668,7 +595,7 @@ class Swiper extends Component {
 
   calculateStackCardZoomStyle = (position) => [
     styles.card,
-    this.getCardStyle(),
+    getCardStyle(this.props),
     {
       zIndex: position * -1,
       transform: [
@@ -681,7 +608,7 @@ class Swiper extends Component {
 
   calculateSwipeBackCardStyle = () => [
     styles.card,
-    this.getCardStyle(),
+    getCardStyle(this.props),
     {
       zIndex: 4,
       transform: [
