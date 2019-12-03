@@ -5,7 +5,7 @@ import isEqual from 'lodash/isEqual';
 
 import { rebuildStackAnimatedValues } from './animations';
 import { calculateCardIndexes } from './calculations';
-import { onDimensionsChange, onPanResponderMove } from './events';
+import { onDimensionsChange } from './events';
 import { initializeCardStyle, initializePanResponder } from './initializers';
 import styles, { getCardStyle } from './styles';
 
