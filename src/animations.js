@@ -15,3 +15,14 @@ export const rebuildStackAnimatedValues = (props) => {
 
   return stackPositionsAndScales;
 };
+
+export const createAnimatedEvent = (
+  horizontalSwipe,
+  verticalSwipe,
+  panX,
+  panY
+) => {
+  const dx = horizontalSwipe ? panX : 0;
+  const dy = verticalSwipe ? panY : 0;
+  return { dx, dy };
+};

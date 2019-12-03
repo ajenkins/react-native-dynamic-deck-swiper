@@ -5,6 +5,7 @@ import isEqual from 'lodash/isEqual';
 
 import { rebuildStackAnimatedValues } from './animations';
 import { calculateCardIndexes } from './calculations';
+import { onDimensionsChange, onPanResponderMove } from './events';
 import { initializeCardStyle, initializePanResponder } from './initializers';
 import styles, { getCardStyle } from './styles';
 
@@ -48,8 +49,14 @@ class Swiper extends Component {
       (value) => (this._animatedValueY = value.value)
     );
 
-    initializeCardStyle(this.onDimensionsChange);
-    this._panResponder = initializePanResponder();
+    initializeCardStyle(onDimensionsChange(this.forceUpdate));
+    this._panResponder = initializePanResponder(
+      this.props,
+      this._animatedValueX,
+      this._animatedValueY,
+      this.state.pan.x,
+      this.state.pan.y
+    );
   }
 
   shouldComponentUpdate = (nextProps, nextState) => {
@@ -70,78 +77,9 @@ class Swiper extends Component {
     this._mounted = false;
     this.state.pan.x.removeAllListeners();
     this.state.pan.y.removeAllListeners();
-    Dimensions.removeEventListener('change', this.onDimensionsChange);
-  };
-
-  createAnimatedEvent = () => {
-    const { horizontalSwipe, verticalSwipe } = this.props;
-    const { x, y } = this.state.pan;
-    const dx = horizontalSwipe ? x : 0;
-    const dy = verticalSwipe ? y : 0;
-    return { dx, dy };
-  };
-
-  onDimensionsChange = () => {
-    this.forceUpdate();
-  };
-
-  onPanResponderMove = (event, gestureState) => {
-    this.props.onSwiping(this._animatedValueX, this._animatedValueY);
-
-    let {
-      overlayOpacityHorizontalThreshold,
-      overlayOpacityVerticalThreshold
-    } = this.props;
-    if (!overlayOpacityHorizontalThreshold) {
-      overlayOpacityHorizontalThreshold = this.props.horizontalThreshold;
-    }
-    if (!overlayOpacityVerticalThreshold) {
-      overlayOpacityVerticalThreshold = this.props.verticalThreshold;
-    }
-
-    let isSwipingLeft, isSwipingRight, isSwipingTop, isSwipingBottom;
-
-    if (
-      Math.abs(this._animatedValueX) > Math.abs(this._animatedValueY) &&
-      Math.abs(this._animatedValueX) > overlayOpacityHorizontalThreshold
-    ) {
-      if (this._animatedValueX > 0) isSwipingRight = true;
-      else isSwipingLeft = true;
-    } else if (
-      Math.abs(this._animatedValueY) > Math.abs(this._animatedValueX) &&
-      Math.abs(this._animatedValueY) > overlayOpacityVerticalThreshold
-    ) {
-      if (this._animatedValueY > 0) isSwipingBottom = true;
-      else isSwipingTop = true;
-    }
-
-    if (isSwipingRight) {
-      this.setState({ labelType: LABEL_TYPES.RIGHT });
-    } else if (isSwipingLeft) {
-      this.setState({ labelType: LABEL_TYPES.LEFT });
-    } else if (isSwipingTop) {
-      this.setState({ labelType: LABEL_TYPES.TOP });
-    } else if (isSwipingBottom) {
-      this.setState({ labelType: LABEL_TYPES.BOTTOM });
-    } else {
-      this.setState({ labelType: LABEL_TYPES.NONE });
-    }
-
-    const { onTapCardDeadZone } = this.props;
-    if (
-      this._animatedValueX < -onTapCardDeadZone ||
-      this._animatedValueX > onTapCardDeadZone ||
-      this._animatedValueY < -onTapCardDeadZone ||
-      this._animatedValueY > onTapCardDeadZone
-    ) {
-      this.setState({
-        slideGesture: true
-      });
-    }
-
-    return Animated.event([null, this.createAnimatedEvent()])(
-      event,
-      gestureState
+    Dimensions.removeEventListener(
+      'change',
+      onDimensionsChange(this.forceUpdate)
     );
   };
 

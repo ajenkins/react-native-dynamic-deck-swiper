@@ -1,10 +1,18 @@
 import { Dimensions, PanResponder } from 'react-native';
 
+import { onPanResponderMove } from './events';
+
 export const initializeCardStyle = (onDimensionsChange) => {
   Dimensions.addEventListener('change', onDimensionsChange);
 };
 
-export const initializePanResponder = () => {
+export const initializePanResponder = (
+  props,
+  animatedValueX,
+  animatedValueY,
+  panX,
+  panY
+) => {
   return PanResponder.create({
     onStartShouldSetPanResponder: (event, gestureState) => true,
     onMoveShouldSetPanResponder: (event, gestureState) => false,
@@ -13,7 +21,7 @@ export const initializePanResponder = () => {
       const isVerticalSwipe = Math.sqrt(
         Math.pow(gestureState.dx, 2) < Math.pow(gestureState.dy, 2)
       );
-      if (!this.props.verticalSwipe && isVerticalSwipe) {
+      if (!props.verticalSwipe && isVerticalSwipe) {
         return false;
       }
       return (
@@ -22,7 +30,13 @@ export const initializePanResponder = () => {
       );
     },
     onPanResponderGrant: this.onPanResponderGrant,
-    onPanResponderMove: this.onPanResponderMove,
+    onPanResponderMove: onPanResponderMove(
+      props,
+      animatedValueX,
+      animatedValueY,
+      panX,
+      panY
+    ),
     onPanResponderRelease: this.onPanResponderRelease,
     onPanResponderTerminate: this.onPanResponderRelease
   });
