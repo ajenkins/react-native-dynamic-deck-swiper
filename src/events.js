@@ -1,6 +1,7 @@
 import { Animated } from 'react-native';
 
 import { createAnimatedEvent } from './animations';
+import { getSwipeDirection } from './calculations';
 
 export const onDimensionsChange = (forceUpdate) => {
   forceUpdate();
@@ -96,16 +97,17 @@ export const onPanResponderGrant = (
   });
 };
 
-validPanResponderRelease = (
+const validPanResponderRelease = (
   { disableBottomSwipe, disableLeftSwipe, disableRightSwipe, disableTopSwipe },
-  { isSwipingLeft, isSwipingRight, isSwipingTop, isSwipingBottom }
+  animatedValueX,
+  animatedValueY
 ) => {
-  // const {
-  //   isSwipingLeft,
-  //   isSwipingRight,
-  //   isSwipingTop,
-  //   isSwipingBottom
-  // } = this.getSwipeDirection(this._animatedValueX, this._animatedValueY);
+  const {
+    isSwipingLeft,
+    isSwipingRight,
+    isSwipingTop,
+    isSwipingBottom
+  } = getSwipeDirection(animatedValueX, animatedValueY);
 
   return (
     (isSwipingLeft && !disableLeftSwipe) ||
@@ -149,7 +151,6 @@ export const onPanResponderRelease = (
   { firstCardIndex, pan, panResponderLocked, slideGesture },
   _animatedValueX,
   _animatedValueY,
-  getSwipeDirection,
   resetTopCard,
   setState,
   swipeCard
@@ -175,10 +176,7 @@ export const onPanResponderRelease = (
 
   if (
     isSwiping &&
-    validPanResponderRelease(
-      props,
-      getSwipeDirection(_animatedValueX, _animatedValueY)
-    )
+    validPanResponderRelease(props, _animatedValueX, _animatedValueY)
   ) {
     const onSwipeDirectionCallback = getOnSwipeDirectionCallback(
       props,

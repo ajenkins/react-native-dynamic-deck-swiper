@@ -55,7 +55,6 @@ class Swiper extends Component {
       this.state,
       this._animatedValueX,
       this._animatedValueY,
-      this.getSwipeDirection,
       this.resetTopCard,
       this.setState,
       this.swipeCard
@@ -84,31 +83,6 @@ class Swiper extends Component {
       'change',
       onDimensionsChange(this.forceUpdate)
     );
-  };
-
-  mustDecrementCardIndex = (animatedValueX, animatedValueY) => {
-    const {
-      isSwipingLeft,
-      isSwipingRight,
-      isSwipingTop,
-      isSwipingBottom
-    } = this.getSwipeDirection(animatedValueX, animatedValueY);
-
-    return (
-      (isSwipingLeft && this.props.goBackToPreviousCardOnSwipeLeft) ||
-      (isSwipingRight && this.props.goBackToPreviousCardOnSwipeRight) ||
-      (isSwipingTop && this.props.goBackToPreviousCardOnSwipeTop) ||
-      (isSwipingBottom && this.props.goBackToPreviousCardOnSwipeBottom)
-    );
-  };
-
-  getSwipeDirection = (animatedValueX, animatedValueY) => {
-    const isSwipingLeft = animatedValueX < -this.props.horizontalThreshold;
-    const isSwipingRight = animatedValueX > this.props.horizontalThreshold;
-    const isSwipingTop = animatedValueY < -this.props.verticalThreshold;
-    const isSwipingBottom = animatedValueY > this.props.verticalThreshold;
-
-    return { isSwipingLeft, isSwipingRight, isSwipingTop, isSwipingBottom };
   };
 
   resetTopCard = (cb) => {
