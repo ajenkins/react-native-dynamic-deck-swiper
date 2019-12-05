@@ -115,12 +115,40 @@ validPanResponderRelease = (
   );
 };
 
+const getOnSwipeDirectionCallback = (
+  { onSwipedLeft, onSwipedRight, onSwipedTop, onSwipedBottom },
+  animatedValueX,
+  animatedValueY
+) => {
+  const {
+    isSwipingLeft,
+    isSwipingRight,
+    isSwipingTop,
+    isSwipingBottom
+  } = this.getSwipeDirection(animatedValueX, animatedValueY);
+
+  if (isSwipingRight) {
+    return onSwipedRight;
+  }
+
+  if (isSwipingLeft) {
+    return onSwipedLeft;
+  }
+
+  if (isSwipingTop) {
+    return onSwipedTop;
+  }
+
+  if (isSwipingBottom) {
+    return onSwipedBottom;
+  }
+};
+
 export const onPanResponderRelease = (
   { dragEnd, horizontalThreshold, verticalThreshold, onTapCard } = props,
   { firstCardIndex, pan, panResponderLocked, slideGesture },
   _animatedValueX,
   _animatedValueY,
-  getOnSwipeDirectionCallback,
   getSwipeDirection,
   resetTopCard,
   setState,
@@ -153,6 +181,7 @@ export const onPanResponderRelease = (
     )
   ) {
     const onSwipeDirectionCallback = getOnSwipeDirectionCallback(
+      props,
       _animatedValueX,
       _animatedValueY
     );
