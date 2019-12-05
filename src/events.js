@@ -19,7 +19,8 @@ export const onPanResponderMove = (
   },
   { pan: { x: panX, y: panY } },
   animatedValueX,
-  animatedValueY
+  animatedValueY,
+  setState
 ) => (event, gestureState) => {
   onSwiping(animatedValueX, animatedValueY);
 
@@ -67,14 +68,12 @@ export const onPanResponderMove = (
   ) {
     stateUpdates.slideGesture = true;
   }
+  setState(stateUpdates);
 
-  return [
-    stateUpdates,
-    Animated.event([
-      null,
-      createAnimatedEvent(horizontalSwipe, verticalSwipe, panX, panY)
-    ])(event, gestureState)
-  ];
+  return Animated.event([
+    null,
+    createAnimatedEvent(horizontalSwipe, verticalSwipe, panX, panY)
+  ])(event, gestureState);
 };
 
 export const onPanResponderGrant = (

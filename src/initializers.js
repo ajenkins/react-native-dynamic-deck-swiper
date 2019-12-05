@@ -47,7 +47,8 @@ export const initializePanResponder = (
       props,
       state,
       animatedValueX,
-      animatedValueY
+      animatedValueY,
+      setState
     ),
     onPanResponderRelease: onPanResponderRelease(
       props,
