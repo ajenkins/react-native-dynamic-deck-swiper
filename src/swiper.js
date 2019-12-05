@@ -55,7 +55,6 @@ class Swiper extends Component {
       this.state,
       this._animatedValueX,
       this._animatedValueY,
-      this.resetTopCard,
       this.setState,
       this.swipeCard
     );
@@ -83,21 +82,6 @@ class Swiper extends Component {
       'change',
       onDimensionsChange(this.forceUpdate)
     );
-  };
-
-  resetTopCard = (cb) => {
-    Animated.spring(this.state.pan, {
-      toValue: 0,
-      friction: this.props.topCardResetAnimationFriction,
-      tension: this.props.topCardResetAnimationTension
-    }).start(cb);
-
-    this.state.pan.setOffset({
-      x: 0,
-      y: 0
-    });
-
-    this.props.onSwipedAborted();
   };
 
   swipeBack = (cb) => {

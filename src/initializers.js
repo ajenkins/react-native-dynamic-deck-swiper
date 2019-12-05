@@ -15,7 +15,6 @@ export const initializePanResponder = (
   state,
   animatedValueX,
   animatedValueY,
-  resetTopCard,
   setState,
   swipeCard
 ) => {
@@ -53,7 +52,6 @@ export const initializePanResponder = (
       state,
       animatedValueX,
       animatedValueY,
-      resetTopCard,
       setState,
       swipeCard
     ),

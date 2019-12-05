@@ -1,6 +1,6 @@
 import { Animated } from 'react-native';
 
-import { createAnimatedEvent } from './animations';
+import { createAnimatedEvent, resetTopCard } from './animations';
 import { getSwipeDirection } from './calculations';
 
 export const onDimensionsChange = (forceUpdate) => {
@@ -147,11 +147,18 @@ const getOnSwipeDirectionCallback = (
 };
 
 export const onPanResponderRelease = (
-  { dragEnd, horizontalThreshold, verticalThreshold, onTapCard } = props,
+  {
+    dragEnd,
+    horizontalThreshold,
+    verticalThreshold,
+    topCardResetAnimationFriction,
+    topCardResetAnimationTension,
+    onSwipeAborted,
+    onTapCard
+  } = props,
   { firstCardIndex, pan, panResponderLocked, slideGesture },
   _animatedValueX,
   _animatedValueY,
-  resetTopCard,
   setState,
   swipeCard
 ) => (e, gestureState) => {
@@ -186,7 +193,12 @@ export const onPanResponderRelease = (
 
     swipeCard(onSwipeDirectionCallback);
   } else {
-    resetTopCard();
+    resetTopCard(
+      pan,
+      topCardResetAnimationFriction,
+      topCardResetAnimationTension,
+      onSwipeAborted
+    );
   }
 
   if (!slideGesture) {

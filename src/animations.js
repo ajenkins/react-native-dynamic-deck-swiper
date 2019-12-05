@@ -26,3 +26,23 @@ export const createAnimatedEvent = (
   const dy = verticalSwipe ? panY : 0;
   return { dx, dy };
 };
+
+export const resetTopCard = (
+  pan,
+  topCardResetAnimationFriction,
+  topCardResetAnimationTension,
+  onSwipedAborted
+) => {
+  Animated.spring(pan, {
+    toValue: 0,
+    friction: topCardResetAnimationFriction,
+    tension: topCardResetAnimationTension
+  }).start();
+
+  pan.setOffset({
+    x: 0,
+    y: 0
+  });
+
+  onSwipedAborted();
+};
