@@ -15,8 +15,7 @@ export const initializePanResponder = (
   state,
   animatedValueX,
   animatedValueY,
-  setState,
-  swipeCard
+  setState
 ) => {
   return PanResponder.create({
     onStartShouldSetPanResponder: (event, gestureState) => true,
@@ -52,8 +51,7 @@ export const initializePanResponder = (
       state,
       animatedValueX,
       animatedValueY,
-      setState,
-      swipeCard
+      setState
     ),
     onPanResponderTerminate: this.onPanResponderRelease
   });

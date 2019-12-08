@@ -17,7 +17,6 @@ const LABEL_TYPES = {
   TOP: 'top',
   BOTTOM: 'bottom'
 };
-const SWIPE_MULTIPLY_FACTOR = 4.5;
 
 class Swiper extends Component {
   constructor(props) {
@@ -55,8 +54,7 @@ class Swiper extends Component {
       this.state,
       this._animatedValueX,
       this._animatedValueY,
-      this.setState,
-      this.swipeCard
+      this.setState
     );
   }
 
@@ -82,197 +80,6 @@ class Swiper extends Component {
       'change',
       onDimensionsChange(this.forceUpdate)
     );
-  };
-
-  swipeBack = (cb) => {
-    const { swipeBackXYPositions, isSwipingBack } = this.state;
-    const { infinite } = this.props;
-    const canSwipeBack =
-      !isSwipingBack && (swipeBackXYPositions.length > 0 || infinite);
-    if (!canSwipeBack) {
-      return;
-    }
-    this.setState(
-      { isSwipingBack: !isSwipingBack, swipeBackXYPositions },
-      () => {
-        this.animatePreviousCard(this.calculateNextPreviousCardPosition(), cb);
-      }
-    );
-  };
-
-  swipeLeft = (mustDecrementCardIndex = false) => {
-    this.swipeCard(
-      this.props.onSwipedLeft,
-      -this.props.horizontalThreshold,
-      0,
-      mustDecrementCardIndex
-    );
-  };
-
-  swipeRight = (mustDecrementCardIndex = false) => {
-    this.swipeCard(
-      this.props.onSwipedRight,
-      this.props.horizontalThreshold,
-      0,
-      mustDecrementCardIndex
-    );
-  };
-
-  swipeTop = (mustDecrementCardIndex = false) => {
-    this.swipeCard(
-      this.props.onSwipedTop,
-      0,
-      -this.props.verticalThreshold,
-      mustDecrementCardIndex
-    );
-  };
-
-  swipeBottom = (mustDecrementCardIndex = false) => {
-    this.swipeCard(
-      this.props.onSwipedBottom,
-      0,
-      this.props.verticalThreshold,
-      mustDecrementCardIndex
-    );
-  };
-
-  swipeCard = (
-    onSwiped,
-    x = this._animatedValueX,
-    y = this._animatedValueY,
-    mustDecrementCardIndex = false
-  ) => {
-    this.setState({ panResponderLocked: true });
-    this.animateStack();
-    Animated.timing(this.state.pan, {
-      toValue: {
-        x: x * SWIPE_MULTIPLY_FACTOR,
-        y: y * SWIPE_MULTIPLY_FACTOR
-      },
-      duration: this.props.swipeAnimationDuration
-    }).start(() => {
-      this.setSwipeBackCardXY(x, y, () => {
-        mustDecrementCardIndex = mustDecrementCardIndex
-          ? true
-          : this.mustDecrementCardIndex(
-              this._animatedValueX,
-              this._animatedValueY
-            );
-
-        if (mustDecrementCardIndex) {
-          this.decrementCardIndex(onSwiped);
-        } else {
-          this.incrementCardIndex(onSwiped);
-        }
-      });
-    });
-  };
-
-  setSwipeBackCardXY = (x = -width, y = 0, cb) => {
-    this.setState(
-      { swipeBackXYPositions: [...this.state.swipeBackXYPositions, { x, y }] },
-      cb
-    );
-  };
-
-  animatePreviousCard = ({ x, y }, cb) => {
-    const { previousCardX, previousCardY } = this.state;
-    previousCardX.setValue(x * SWIPE_MULTIPLY_FACTOR);
-    previousCardY.setValue(y * SWIPE_MULTIPLY_FACTOR);
-    Animated.parallel([
-      Animated.spring(this.state.previousCardX, {
-        toValue: 0,
-        friction: this.props.stackAnimationFriction,
-        tension: this.props.stackAnimationTension,
-        useNativeDriver: true
-      }),
-      Animated.spring(this.state.previousCardY, {
-        toValue: 0,
-        friction: this.props.stackAnimationFriction,
-        tension: this.props.stackAnimationTension,
-        useNativeDriver: true
-      })
-    ]).start(() => {
-      this.setState({ isSwipingBack: false });
-      this.decrementCardIndex(cb);
-    });
-  };
-
-  animateStack = () => {
-    const { cards, secondCardIndex, swipedAllCards } = this.state;
-    let { stackSize, infinite, showSecondCard } = this.props;
-    let index = secondCardIndex;
-
-    while (stackSize-- > 1 && showSecondCard && !swipedAllCards) {
-      if (
-        this.state[`stackPosition${stackSize}`] &&
-        this.state[`stackScale${stackSize}`]
-      ) {
-        const newSeparation = this.props.stackSeparation * (stackSize - 1);
-        const newScale = (100 - this.props.stackScale * (stackSize - 1)) * 0.01;
-        Animated.parallel([
-          Animated.spring(this.state[`stackPosition${stackSize}`], {
-            toValue: newSeparation,
-            friction: this.props.stackAnimationFriction,
-            tension: this.props.stackAnimationTension,
-            useNativeDriver: true
-          }),
-          Animated.spring(this.state[`stackScale${stackSize}`], {
-            toValue: newScale,
-            friction: this.props.stackAnimationFriction,
-            tension: this.props.stackAnimationTension,
-            useNativeDriver: true
-          })
-        ]).start();
-      }
-
-      if (infinite) {
-        index++;
-      } else {
-        if (index === cards.length - 1) {
-          break;
-        } else {
-          index++;
-        }
-      }
-    }
-  };
-
-  incrementCardIndex = (onSwiped) => {
-    const { firstCardIndex } = this.state;
-    const { infinite } = this.props;
-    let newCardIndex = firstCardIndex + 1;
-    let swipedAllCards = false;
-
-    this.onSwipedCallbacks(onSwiped);
-
-    allSwipedCheck = () => newCardIndex === this.state.cards.length;
-
-    if (allSwipedCheck()) {
-      if (!infinite) {
-        this.props.onSwipedAll();
-        // onSwipeAll may have added cards
-        if (allSwipedCheck()) {
-          swipedAllCards = true;
-        }
-      } else {
-        newCardIndex = 0;
-      }
-    }
-
-    this.setCardIndex(newCardIndex, swipedAllCards);
-  };
-
-  decrementCardIndex = (cb) => {
-    const { firstCardIndex } = this.state;
-    const lastCardIndex = this.state.cards.length - 1;
-    const previousCardIndex = firstCardIndex - 1;
-
-    const newCardIndex =
-      firstCardIndex === 0 ? lastCardIndex : previousCardIndex;
-
-    this.onSwipedCallbacks(cb);
-    this.setCardIndex(newCardIndex, false);
   };
 
   jumpToCardIndex = (newCardIndex) => {

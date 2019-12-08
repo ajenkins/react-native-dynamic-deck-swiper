@@ -44,3 +44,39 @@ export const mustDecrementCardIndex = (
     (isSwipingBottom && goBackToPreviousCardOnSwipeBottom)
   );
 };
+
+export const incrementCardIndex = (onSwiped) => {
+  const { firstCardIndex } = this.state;
+  const { infinite } = this.props;
+  let newCardIndex = firstCardIndex + 1;
+  let swipedAllCards = false;
+
+  this.onSwipedCallbacks(onSwiped);
+
+  allSwipedCheck = () => newCardIndex === this.state.cards.length;
+
+  if (allSwipedCheck()) {
+    if (!infinite) {
+      this.props.onSwipedAll();
+      // onSwipeAll may have added cards
+      if (allSwipedCheck()) {
+        swipedAllCards = true;
+      }
+    } else {
+      newCardIndex = 0;
+    }
+  }
+
+  this.setCardIndex(newCardIndex, swipedAllCards);
+};
+
+export const decrementCardIndex = (onSwiped) => {
+  const { firstCardIndex } = this.state;
+  const lastCardIndex = this.state.cards.length - 1;
+  const previousCardIndex = firstCardIndex - 1;
+
+  const newCardIndex = firstCardIndex === 0 ? lastCardIndex : previousCardIndex;
+
+  this.onSwipedCallbacks(onSwiped);
+  this.setCardIndex(newCardIndex, false);
+};
