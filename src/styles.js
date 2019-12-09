@@ -1,13 +1,18 @@
 import { Dimensions, StyleSheet } from 'react-native';
 
-const { SCREEN_HEIGHT, SCREEN_WIDTH } = Dimensions.get('screen');
+const { height, width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-  card: {
-    flex: 1,
+  topCard: {
     position: 'absolute',
-    height: SCREEN_HEIGHT,
-    width: SCREEN_WIDTH
+    height,
+    width,
+    zIndex: 1
+  },
+  nextCard: {
+    position: 'absolute',
+    height,
+    width
   }
 });
 
