@@ -39,7 +39,12 @@ export default function App() {
     onPanResponderMove: (event, gestureState) => {
       position.setValue({ x: gestureState.dx, y: gestureState.dy });
     },
-    onPanResponderRelease: (event, gestureState) => {}
+    onPanResponderRelease: (event, gestureState) => {
+      Animated.spring(position, {
+        toValue: { x: 0, y: 0 },
+        friction: 4
+      }).start();
+    }
   });
   return (
     <View style={styles.container}>
