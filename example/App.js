@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Animated,
   Dimensions,
@@ -32,12 +32,19 @@ const cards = ['YOU', 'SHOULD', 'HAVE', 'BOUGHT', 'A', 'SQUIRREL'];
 //   );
 // }
 const { height, width } = Dimensions.get('window');
+
 export default function App() {
+  const [swipeDirection, setSwipeDirection] = useState(null);
   const position = new Animated.ValueXY();
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: (event, gestureState) => true,
     onPanResponderMove: (event, gestureState) => {
       position.setValue({ x: gestureState.dx, y: gestureState.dy });
+      if (gestureState.dx > 0) {
+        setSwipeDirection('right');
+      } else if (gestureState.dx < 0) {
+        setSwipeDirection('left');
+      }
     },
     onPanResponderRelease: (event, gestureState) => {
       Animated.spring(position, {
@@ -72,7 +79,7 @@ export default function App() {
         }}
       >
         <View style={styles.card}>
-          <Text style={styles.text}>This is the second card</Text>
+          <Text style={styles.text}>You swiped to the {swipeDirection}</Text>
         </View>
       </Animated.View>
     </View>
