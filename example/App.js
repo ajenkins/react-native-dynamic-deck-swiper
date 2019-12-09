@@ -48,17 +48,26 @@ export default function App() {
         style={[
           { transform: position.getTranslateTransform() },
           {
-            flex: 1,
-            position: 'aboslute',
-            top: 0,
-            bottom: 0,
+            position: 'absolute',
             height,
-            width
+            width,
+            zIndex: 1
           }
         ]}
       >
         <View style={styles.card}>
           <Text style={styles.text}>This is the first card</Text>
+        </View>
+      </Animated.View>
+      <Animated.View
+        style={{
+          position: 'absolute',
+          height,
+          width
+        }}
+      >
+        <View style={styles.card}>
+          <Text style={styles.text}>This is the second card</Text>
         </View>
       </Animated.View>
     </View>
