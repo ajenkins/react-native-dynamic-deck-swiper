@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Animated, PanResponder, View } from 'react-native';
+import { Animated, Dimensions, PanResponder, View } from 'react-native';
 
 import styles from './styles';
 
@@ -11,6 +11,8 @@ import styles from './styles';
 // plane calls setSwipeDirection which changes the value
 // of swipeDirection and triggers a re-render, which then
 // resets the value of position back to the middle.
+
+const { height, width } = Dimensions.get('window');
 
 const nextCardProps = ({
   first = false,
@@ -24,11 +26,14 @@ const nextCardProps = ({
 });
 
 const DynamicSwiper = ({ getNextCardData, renderCard }) => {
+  const _getNextCardData = (obj) => getNextCardData(nextCardProps(obj));
+
+  const [topCardData, setTopCardData] = useState(
+    _getNextCardData({ first: true })
+  );
   const [previousCards, setPreviousCards] = useState([]);
   const [swipeDirection, setSwipeDirection] = useState(null);
   const position = new Animated.ValueXY();
-
-  const _getNextCardData = (obj) => getNextCardData(nextCardProps(obj));
 
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: (event, gestureState) => true,
@@ -41,14 +46,29 @@ const DynamicSwiper = ({ getNextCardData, renderCard }) => {
       }
     },
     onPanResponderRelease: (event, gestureState) => {
-      Animated.spring(position, {
-        toValue: { x: 0, y: 0 },
-        friction: 4
-      }).start();
+      if (gestureState.dx > 120) {
+        Animated.spring(position, {
+          toValue: { x: width + 100, y: gestureState.dy }
+        }).start(() => {
+          setPreviousCards([...previousCards, topCardData]);
+          setTopCardData(_getNextCardData({ left: true, previousCards }));
+        });
+      } else if (gestureState.dx < -120) {
+        Animated.spring(position, {
+          toValue: { x: -width - 100, y: gestureState.dy }
+        }).start(() => {
+          setPreviousCards([...previousCards, topCardData]);
+          setTopCardData(_getNextCardData({ right: true, previousCards }));
+        });
+      } else {
+        Animated.spring(position, {
+          toValue: { x: 0, y: 0 },
+          friction: 4
+        }).start();
+      }
     }
   });
 
-  const firstCardData = _getNextCardData({ first: true });
   return (
     <>
       <Animated.View
@@ -58,7 +78,7 @@ const DynamicSwiper = ({ getNextCardData, renderCard }) => {
           styles.topCard
         ]}
       >
-        {renderCard(firstCardData)}
+        {renderCard(topCardData)}
       </Animated.View>
       <View style={styles.nextCard}>
         {renderCard(_getNextCardData({ swipeDirection, previousCards }))}
