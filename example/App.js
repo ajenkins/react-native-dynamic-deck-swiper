@@ -1,26 +1,47 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Animated, Dimensions, StyleSheet, Text, View } from 'react-native';
 import Swiper from 'react-native-dynamic-deck-swiper';
 
 const cards = ['YOU', 'SHOULD', 'HAVE', 'BOUGHT', 'A', 'SQUIRREL'];
 
+// export default function App() {
+//   return (
+//     <View style={styles.container}>
+//       <Swiper
+//         nextCard={({ first, left, right, previousCards }) => {
+//           if (first) {
+//             return 'This is the first card';
+//           } else {
+//             return 'There are a lot of these cards';
+//           }
+//         }}
+//         renderCard={(card) => (
+//           <View style={styles.card}>
+//             <Text style={styles.text}>{card}</Text>
+//           </View>
+//         )}
+//       />
+//     </View>
+//   );
+// }
+const { height, width } = Dimensions.get('window');
 export default function App() {
   return (
     <View style={styles.container}>
-      <Swiper
-        nextCard={({ first, left, right, previousCards }) => {
-          if (first) {
-            return 'This is the first card';
-          } else {
-            return 'There are a lot of these cards';
-          }
+      <Animated.View
+        style={{
+          flex: 1,
+          position: 'aboslute',
+          top: 0,
+          bottom: 0,
+          height,
+          width
         }}
-        renderCard={(card) => (
-          <View style={styles.card}>
-            <Text style={styles.text}>{card}</Text>
-          </View>
-        )}
-      />
+      >
+        <View style={styles.card}>
+          <Text style={styles.text}>This is the first card</Text>
+        </View>
+      </Animated.View>
     </View>
   );
 }
