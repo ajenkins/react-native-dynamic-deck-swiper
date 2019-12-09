@@ -1,87 +1,26 @@
 import React, { useState } from 'react';
-import {
-  Animated,
-  Dimensions,
-  PanResponder,
-  StyleSheet,
-  Text,
-  View
-} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Swiper from 'react-native-dynamic-deck-swiper';
 
-const cards = ['YOU', 'SHOULD', 'HAVE', 'BOUGHT', 'A', 'SQUIRREL'];
-
-// export default function App() {
-//   return (
-//     <View style={styles.container}>
-//       <Swiper
-//         nextCard={({ first, left, right, previousCards }) => {
-//           if (first) {
-//             return 'This is the first card';
-//           } else {
-//             return 'There are a lot of these cards';
-//           }
-//         }}
-//         renderCard={(card) => (
-//           <View style={styles.card}>
-//             <Text style={styles.text}>{card}</Text>
-//           </View>
-//         )}
-//       />
-//     </View>
-//   );
-// }
-const { height, width } = Dimensions.get('window');
-
 export default function App() {
-  const [swipeDirection, setSwipeDirection] = useState(null);
-  const position = new Animated.ValueXY();
-  const panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: (event, gestureState) => true,
-    onPanResponderMove: (event, gestureState) => {
-      position.setValue({ x: gestureState.dx, y: gestureState.dy });
-      if (gestureState.dx > 0) {
-        setSwipeDirection('right');
-      } else if (gestureState.dx < 0) {
-        setSwipeDirection('left');
-      }
-    },
-    onPanResponderRelease: (event, gestureState) => {
-      Animated.spring(position, {
-        toValue: { x: 0, y: 0 },
-        friction: 4
-      }).start();
-    }
-  });
   return (
     <View style={styles.container}>
-      <Animated.View
-        {...panResponder.panHandlers}
-        style={[
-          { transform: position.getTranslateTransform() },
-          {
-            position: 'absolute',
-            height,
-            width,
-            zIndex: 1
+      <Swiper
+        getNextCardData={({ first, left, right, previousCards }) => {
+          if (first) {
+            return 'This is the first card';
+          } else if (left) {
+            return 'You swiped to the left';
+          } else if (right) {
+            return 'You swiped to the right';
           }
-        ]}
-      >
-        <View style={styles.card}>
-          <Text style={styles.text}>This is the first card</Text>
-        </View>
-      </Animated.View>
-      <Animated.View
-        style={{
-          position: 'absolute',
-          height,
-          width
         }}
-      >
-        <View style={styles.card}>
-          <Text style={styles.text}>You swiped to the {swipeDirection}</Text>
-        </View>
-      </Animated.View>
+        renderCard={(card) => (
+          <View style={styles.card}>
+            <Text style={styles.text}>{card}</Text>
+          </View>
+        )}
+      />
     </View>
   );
 }
