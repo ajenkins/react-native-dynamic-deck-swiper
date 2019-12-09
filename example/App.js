@@ -57,7 +57,13 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#E8E8E8',
     justifyContent: 'center',
-    backgroundColor: 'white'
+    backgroundColor: 'turquoise',
+    marginTop: 60,
+    marginBottom: 60,
+    marginLeft: 30,
+    marginRight: 30,
+    borderRadius: 30,
+    padding: 10
   },
   text: {
     textAlign: 'center',
