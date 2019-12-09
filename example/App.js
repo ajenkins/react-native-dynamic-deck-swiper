@@ -1,5 +1,12 @@
 import React from 'react';
-import { Animated, Dimensions, StyleSheet, Text, View } from 'react-native';
+import {
+  Animated,
+  Dimensions,
+  PanResponder,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
 import Swiper from 'react-native-dynamic-deck-swiper';
 
 const cards = ['YOU', 'SHOULD', 'HAVE', 'BOUGHT', 'A', 'SQUIRREL'];
@@ -26,17 +33,29 @@ const cards = ['YOU', 'SHOULD', 'HAVE', 'BOUGHT', 'A', 'SQUIRREL'];
 // }
 const { height, width } = Dimensions.get('window');
 export default function App() {
+  const position = new Animated.ValueXY();
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: (event, gestureState) => true,
+    onPanResponderMove: (event, gestureState) => {
+      position.setValue({ x: gestureState.dx, y: gestureState.dy });
+    },
+    onPanResponderRelease: (event, gestureState) => {}
+  });
   return (
     <View style={styles.container}>
       <Animated.View
-        style={{
-          flex: 1,
-          position: 'aboslute',
-          top: 0,
-          bottom: 0,
-          height,
-          width
-        }}
+        {...panResponder.panHandlers}
+        style={[
+          { transform: position.getTranslateTransform() },
+          {
+            flex: 1,
+            position: 'aboslute',
+            top: 0,
+            bottom: 0,
+            height,
+            width
+          }
+        ]}
       >
         <View style={styles.card}>
           <Text style={styles.text}>This is the first card</Text>
