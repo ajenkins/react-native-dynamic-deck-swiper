@@ -7,6 +7,11 @@ import styles from './styles';
 // they've reached the last card, which should not be
 // swipable.
 
+// TODO: Fix bug where moving card across the middle
+// plane calls setSwipeDirection which changes the value
+// of swipeDirection and triggers a re-render, which then
+// resets the value of position back to the middle.
+
 const nextCardProps = ({
   first = false,
   swipeDirection,
