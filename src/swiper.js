@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Animated, Dimensions, PanResponder, View } from 'react-native';
+import { Animated, Dimensions, PanResponder, Text, View } from 'react-native';
 
 import styles from './styles';
 
@@ -79,9 +79,11 @@ const DynamicSwiper = ({ getNextCardData, renderCard }) => {
         ]}
       >
         {renderCard(topCardData)}
+        <Text>this is the top card</Text>
       </Animated.View>
       <View style={styles.nextCard}>
         {renderCard(_getNextCardData({ swipeDirection, previousCards }))}
+        <Text>this is the next card</Text>
       </View>
     </>
   );
