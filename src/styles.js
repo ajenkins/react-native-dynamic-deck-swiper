@@ -7,12 +7,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height,
     width,
+    backgroundColor: 'red',
     zIndex: 1
   },
   nextCard: {
     position: 'absolute',
     height,
-    width
+    width,
+    backgroundColor: 'blue'
   }
 });
 

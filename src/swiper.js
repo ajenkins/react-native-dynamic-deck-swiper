@@ -51,14 +51,25 @@ const DynamicSwiper = ({ getNextCardData, renderCard }) => {
           toValue: { x: width + 100, y: gestureState.dy }
         }).start(() => {
           setPreviousCards([...previousCards, topCardData]);
-          setTopCardData(_getNextCardData({ left: true, previousCards }));
+          console.log(getNextCardData({ right: true, previousCards }));
+          console.log(
+            nextCardProps({ swipeDirection: 'right', previousCards })
+          );
+          console.log(
+            _getNextCardData({ swipeDirection: 'right', previousCards })
+          );
+          setTopCardData(
+            _getNextCardData({ swipeDirection: 'right', previousCards })
+          );
         });
       } else if (gestureState.dx < -120) {
         Animated.spring(position, {
           toValue: { x: -width - 100, y: gestureState.dy }
         }).start(() => {
           setPreviousCards([...previousCards, topCardData]);
-          setTopCardData(_getNextCardData({ right: true, previousCards }));
+          setTopCardData(
+            _getNextCardData({ swipeDirection: 'left', previousCards })
+          );
         });
       } else {
         Animated.spring(position, {
@@ -79,11 +90,10 @@ const DynamicSwiper = ({ getNextCardData, renderCard }) => {
         ]}
       >
         {renderCard(topCardData)}
-        <Text>this is the top card</Text>
       </Animated.View>
       <View style={styles.nextCard}>
         {renderCard(_getNextCardData({ swipeDirection, previousCards }))}
-        <Text>this is the next card</Text>
+        <Text>Top Card Data: {JSON.stringify(topCardData)}</Text>
       </View>
     </>
   );
