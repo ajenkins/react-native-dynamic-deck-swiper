@@ -58,13 +58,17 @@ class Swiper extends React.Component {
           Animated.spring(this.position, {
             toValue: { x: width + 100, y: gestureState.dy }
           }).start(() => {
-            this.setState({ index: this.state.index + 1 });
+            this.setState({ index: this.state.index + 1 }, () => {
+              this.position.setValue({ x: 0, y: 0 });
+            });
           });
         } else if (gestureState.dx < -120) {
           Animated.spring(this.position, {
             toValue: { x: -width - 100, y: gestureState.dy }
           }).start(() => {
-            this.setState({ index: this.state.index + 1 });
+            this.setState({ index: this.state.index + 1 }, () => {
+              this.position.setValue({ x: 0, y: 0 });
+            });
           });
         } else {
           Animated.spring(this.position, {
@@ -77,6 +81,7 @@ class Swiper extends React.Component {
   }
 
   renderCards() {
+    console.log(this.state.index);
     return this.cards
       .map((card, i) => {
         if (this.state.index > i) {
@@ -96,9 +101,9 @@ class Swiper extends React.Component {
           );
         } else {
           return (
-            <View style={styles.nextCard} key={card}>
+            <Animated.View style={styles.nextCard} key={card}>
               {this.props.renderCard(card)}
-            </View>
+            </Animated.View>
           );
         }
       })
@@ -106,7 +111,7 @@ class Swiper extends React.Component {
   }
 
   render() {
-    return <View>{this.renderCards()}</View>;
+    return this.renderCards();
   }
 }
 // End of component
