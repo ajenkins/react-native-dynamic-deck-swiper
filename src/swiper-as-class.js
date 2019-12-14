@@ -25,16 +25,43 @@ const nextCardProps = ({
   previousCards
 });
 
+// TODO: This could be a helpful performance optimization
+// function createCardTree(getNextCardData, maxDepth = 5) {
+//   function _createCardTree(cardTree, remainingDepth, swipeDirection) {
+//     let cardTree = JSON.parse(JSON.stringify(cardTree));
+//     if (remainingDepth === 0) {
+//       return cardTree;
+//     }
+//     switch (swipeDirection) {
+//       case 'first':
+//         return _createCardTree()
+//       case 'left':
+//         break;
+//       case 'right':
+//         break;
+//     }
+//   }
+//   return _getNextCardData({}, maxDepth, 'first');
+// }
+
 class DynamicSwiper extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       topCardData: this._getNextCardData({ first: true }),
       previousCards: [],
-      swipeDirection: null
+      swipeDirection: null,
+      index: 0 // This is temporary
     };
     this.position = new Animated.ValueXY();
     this.panResponder = this.createPanResponder();
+    this.renderCards = this.renderCards.bind(this);
+    this.cards = [
+      'This is the first card',
+      'This is the second card',
+      'This is the third card',
+      'This is the fourth card'
+    ];
   }
 
   _getNextCardData(obj) {
@@ -57,43 +84,13 @@ class DynamicSwiper extends React.Component {
           Animated.spring(this.position, {
             toValue: { x: width + 100, y: gestureState.dy }
           }).start(() => {
-            this.setState(
-              {
-                previousCards: [
-                  ...this.state.previousCards,
-                  this.state.topCardData
-                ]
-              },
-              () => {
-                this.setState({
-                  topCardData: this._getNextCardData({
-                    swipeDirection: 'right',
-                    previousCards: this.state.previousCards
-                  })
-                });
-              }
-            );
+            this.setState({ index: this.state.index + 1 });
           });
         } else if (gestureState.dx < -120) {
           Animated.spring(this.position, {
             toValue: { x: -width - 100, y: gestureState.dy }
           }).start(() => {
-            this.setState(
-              {
-                previousCards: [
-                  ...this.state.previousCards,
-                  this.state.topCardData
-                ]
-              },
-              () => {
-                this.setState({
-                  topCardData: this._getNextCardData({
-                    swipeDirection: 'left',
-                    previousCards: this.state.previousCards
-                  })
-                });
-              }
-            );
+            this.setState({ index: this.state.index + 1 });
           });
         } else {
           Animated.spring(this.position, {
@@ -105,29 +102,32 @@ class DynamicSwiper extends React.Component {
     });
   }
 
+  renderCards() {
+    return this.cards.map((card, i) => {
+      if (this.state.index > i) {
+        return null;
+      } else if (this.state.index === i) {
+        return (
+          <Animated.View
+            {...this.panResponder.panHandlers}
+            style={[
+              { transform: this.position.getTranslateTransform() },
+              styles.topCard
+            ]}
+          >
+            {this.props.renderCard(card)}
+          </Animated.View>
+        );
+      } else {
+        return (
+          <View style={styles.nextCard}>{this.props.renderCard(card)}</View>
+        );
+      }
+    });
+  }
+
   render() {
-    return (
-      <>
-        <Animated.View
-          {...this.panResponder.panHandlers}
-          style={[
-            { transform: this.position.getTranslateTransform() },
-            styles.topCard
-          ]}
-        >
-          {this.props.renderCard(this.state.topCardData)}
-        </Animated.View>
-        <View style={styles.nextCard}>
-          {this.props.renderCard(
-            this._getNextCardData({
-              swipeDirection: this.state.swipeDirection,
-              previousCards: this.state.previousCards
-            })
-          )}
-          <Text>Top Card Data: {JSON.stringify(this.state.topCardData)}</Text>
-        </View>
-      </>
-    );
+    return this.renderCards();
   }
 }
 
