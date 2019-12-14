@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Animated, Dimensions, PanResponder, Text, View } from 'react-native';
 
 import styles from './styles';
@@ -34,6 +34,11 @@ const DynamicSwiper = ({ getNextCardData, renderCard }) => {
   const [previousCards, setPreviousCards] = useState([]);
   const [swipeDirection, setSwipeDirection] = useState(null);
   const position = new Animated.ValueXY();
+
+  // For debugging
+  useEffect(() => {
+    console.log(`top card is: ${JSON.stringify(topCardData)}`);
+  });
 
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: (event, gestureState) => true,
