@@ -103,31 +103,36 @@ class DynamicSwiper extends React.Component {
   }
 
   renderCards() {
-    return this.cards.map((card, i) => {
-      if (this.state.index > i) {
-        return null;
-      } else if (this.state.index === i) {
-        return (
-          <Animated.View
-            {...this.panResponder.panHandlers}
-            style={[
-              { transform: this.position.getTranslateTransform() },
-              styles.topCard
-            ]}
-          >
-            {this.props.renderCard(card)}
-          </Animated.View>
-        );
-      } else {
-        return (
-          <View style={styles.nextCard}>{this.props.renderCard(card)}</View>
-        );
-      }
-    });
+    return this.cards
+      .map((card, i) => {
+        if (this.state.index > i) {
+          return null;
+        } else if (this.state.index === i) {
+          return (
+            <Animated.View
+              {...this.panResponder.panHandlers}
+              style={[
+                { transform: this.position.getTranslateTransform() },
+                styles.topCard
+              ]}
+              key={card}
+            >
+              {this.props.renderCard(card)}
+            </Animated.View>
+          );
+        } else {
+          return (
+            <View style={styles.nextCard} key={card}>
+              {this.props.renderCard(card)}
+            </View>
+          );
+        }
+      })
+      .reverse();
   }
 
   render() {
-    return this.renderCards();
+    return <View>{this.renderCards()}</View>;
   }
 }
 
