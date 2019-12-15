@@ -92,11 +92,13 @@ export default function App() {
       <Swiper
         getNextCardData={({ first, left, right, previousCards }) => {
           if (first) {
-            return 'This is the first card';
+            return 'This is the first card. This is card #1.';
           } else if (left) {
-            return 'You swiped to the left';
+            return `You swiped to the left. This is card #${previousCards.length +
+              2}.`;
           } else if (right) {
-            return 'You swiped to the right';
+            return `You swiped to the right. This is card #${previousCards.length +
+              2}.`;
           }
         }}
         renderCard={(card) => (
