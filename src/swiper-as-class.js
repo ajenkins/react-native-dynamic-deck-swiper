@@ -50,22 +50,20 @@ class DynamicSwiper extends React.Component {
     this.state = {
       topCardData: this._getNextCardData({ first: true }),
       previousCards: [],
-      swipeDirection: null,
-      index: 0 // This is temporary
+      swipeDirection: null
     };
     this.position = new Animated.ValueXY();
     this.panResponder = this.createPanResponder();
-    this.renderCards = this.renderCards.bind(this);
-    this.cards = [
-      'This is the first card',
-      'This is the second card',
-      'This is the third card',
-      'This is the fourth card'
-    ];
   }
 
   _getNextCardData(obj) {
     return this.props.getNextCardData(nextCardProps(obj));
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.previousCards.length !== prevState.previousCards.length) {
+      this.position.setValue({ x: 0, y: 0 });
+    }
   }
 
   createPanResponder() {
@@ -102,37 +100,28 @@ class DynamicSwiper extends React.Component {
     });
   }
 
-  renderCards() {
-    return this.cards
-      .map((card, i) => {
-        if (this.state.index > i) {
-          return null;
-        } else if (this.state.index === i) {
-          return (
-            <Animated.View
-              {...this.panResponder.panHandlers}
-              style={[
-                { transform: this.position.getTranslateTransform() },
-                styles.topCard
-              ]}
-              key={card}
-            >
-              {this.props.renderCard(card)}
-            </Animated.View>
-          );
-        } else {
-          return (
-            <View style={styles.nextCard} key={card}>
-              {this.props.renderCard(card)}
-            </View>
-          );
-        }
-      })
-      .reverse();
-  }
-
   render() {
-    return <View>{this.renderCards()}</View>;
+    return (
+      <>
+        <Animated.View
+          {...this.panResponder.panHandlers}
+          style={[
+            { transform: this.position.getTranslateTransform() },
+            styles.topCard
+          ]}
+        >
+          {renderCard(this.state.topCardData)}
+        </Animated.View>
+        <View style={styles.nextCard}>
+          {renderCard(
+            _getNextCardData({
+              swipeDirection: this.state.swipeDirection,
+              previousCards: this.state.previousCards
+            })
+          )}
+        </View>
+      </>
+    );
   }
 }
 
