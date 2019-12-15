@@ -44,6 +44,8 @@ TODO
 
 ## Props
 
+_See component propTypes in the source code for additional usage info._
+
 ### Card props
 
 | Props                   | type                                      | description                                                        | required | default |
@@ -51,6 +53,12 @@ TODO
 | getNextCardData         | func({first, left, right, previousCards}) | return value is passed to renderCard as cardData for the next card | required |
 | renderCard              | func(cardData)                            | function to render the card based on the data                      | required |
 | preventVerticalDragging | bool                                      | enable/disable horizontal swiping                                  |          | true    |
+
+### Swipe animation props
+
+| Props               | type   | description                | default   |
+| :------------------ | :----- | :------------------------- | :-------- |
+| horizontalThreshold | number | horizontal swipe threshold | width / 4 |
 
 ### Event callbacks
 
@@ -61,15 +69,9 @@ TODO
 | onSwipedAborted | func | function to be called when a card is released before reaching the threshold            | () => {}                        |
 | onSwipedLeft    | func | function to be called when a card is swiped left. it receives the swiped card index    | (cardData) => {}                |
 | onSwipedRight   | func | function to be called when a card is swiped right. it receives the swiped card index   | (cardData) => {}                |
-| onSwiping       | func | function to be called while a card is being moved. it receives X and Y positions       | (x, y) => {}                    |
-| dragStart       | func | function to be called when drag start                                                  |                                 |
-| dragEnd         | func | function to be called when drag end                                                    |                                 |
-
-### Swipe animation props
-
-| Props               | type   | description                | default   |
-| :------------------ | :----- | :------------------------- | :-------- |
-| horizontalThreshold | number | horizontal swipe threshold | width / 4 |
+| onDragging      | func | function to be called while a card is being moved. it receives X and Y positions       | (x, y) => {}                    |
+| onDragStart     | func | function to be called when drag start                                                  |                                 |
+| onDragEnd       | func | function to be called when drag end                                                    |                                 |
 
 ## Usage example
 

@@ -166,11 +166,58 @@ DynamicSwiper.propTypes = {
    * look very different and you don't want the user to see the
    * next card flash between the two possible states.
    */
-  preventVerticalDragging: PropTypes.bool
+  preventVerticalDragging: PropTypes.bool,
+  /**
+   * How much the top card must be dragged for it
+   * to count as a swipe.
+   */
+  horizontalThreshold: PropTypes.number,
+  /**
+   * Called (no arguments) once the end of the
+   * deck has been reached.
+   */
+  onEndReached: PropTypes.func,
+  /**
+   * Called after a card is swiped. Called
+   * with the cardData for the card that was swiped.
+   */
+  onSwiped: PropTypes.func,
+  /**
+   * Called if the dragged card is released between
+   * the horizontalThreshold values. Called with the
+   * cardData for the card that was being dragged.
+   */
+  onSwipedAborted: PropTypes.func,
+  /**
+   * Called after a card is swiped to the left.
+   * Called with the cardData for the card that was swiped.
+   */
+  onSwipedLeft: PropTypes.func,
+  /**
+   * Called after a card is swiped to the right.
+   * Called with the cardData for the card that was swiped.
+   */
+  onSwipedRight: PropTypes.func,
+  /**
+   * Called continuously while a card is being dragged.
+   * Called with the cardData for the card.
+   */
+  onDragging: PropTypes.func,
+  /**
+   * Called when the user begins dragging a card.
+   * Not called with any arguments.
+   */
+  onDragStart: PropTypes.func,
+  /**
+   * Called when the user finishes dragging a card
+   * (releases it). Not called with any arguments.
+   */
+  onDragEnd: PropTypes.func
 };
 
 DynamicSwiper.defaultProps = {
-  preventVerticalDragging: false
+  preventVerticalDragging: false,
+  horizontalThreshold: width / 4
 };
 
 export default DynamicSwiper;
