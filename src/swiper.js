@@ -3,9 +3,13 @@ import { Animated, Dimensions, PanResponder, View } from 'react-native';
 
 import styles from './styles';
 
-// TODO: Figure out how to let the user indicate that
+// TODO - MUST HAVES:
+// Figure out how to let the user indicate that
 // they've reached the last card, which should not be
 // swipable.
+// Update license, readme, package.json
+// Add proptypes to component
+// Add event callback props
 
 // TODO: Calculate dimensions more dynamically
 const { width } = Dimensions.get('window');
@@ -22,6 +26,7 @@ const nextCardProps = ({
 });
 
 // TODO: Recursively createCardTree to improve performance
+// TODO: Write unit tests using RTL
 
 class DynamicSwiper extends React.Component {
   constructor(props) {
