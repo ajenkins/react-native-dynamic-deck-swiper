@@ -1,1 +1,1 @@
-export default from './src/swiper-as-class';
+export default from './src/swiper';

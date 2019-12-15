@@ -4,7 +4,7 @@ import Swiper from 'react-native-dynamic-deck-swiper';
 
 export default function App() {
   return (
-    <View style={styles2.container}>
+    <View style={styles.container}>
       <Swiper
         getNextCardData={({ first, left, right, previousCards }) => {
           if (first) {
@@ -18,8 +18,8 @@ export default function App() {
           }
         }}
         renderCard={(card) => (
-          <View style={styles2.card}>
-            <Text style={styles2.text}>{card}</Text>
+          <View style={styles.card}>
+            <Text style={styles.text}>{card}</Text>
           </View>
         )}
       />
@@ -27,7 +27,7 @@ export default function App() {
   );
 }
 
-const styles2 = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5FCFF'
