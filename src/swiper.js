@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import styles from './styles';
 
 // TODO - MUST HAVES:
-// Add proptypes to component
 // Add event callback props (onSwipe, onLastCardReached)
 
 // TODO: Calculate dimensions more dynamically
@@ -54,7 +53,12 @@ class DynamicSwiper extends React.Component {
     return PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove: (e, gestureState) => {
-        this.position.setValue({ x: gestureState.dx, y: gestureState.dy });
+        if (this.props.preventVerticalDragging) {
+          this.position.setValue({ x: gestureState.dx, y: 0 });
+        } else {
+          this.position.setValue({ x: gestureState.dx, y: gestureState.dy });
+        }
+
         if (gestureState.dx > 0) {
           this.setState({ swipeDirection: 'right' });
         } else if (gestureState.dx < 0) {
@@ -155,7 +159,18 @@ DynamicSwiper.propTypes = {
    * sure your function handles the case where cardData is null if you
    * don't want the last card to be blank.
    */
-  renderCard: PropTypes.func.isRequired
+  renderCard: PropTypes.func.isRequired,
+  /**
+   * Restricts dragging to the horizontal movement only.
+   * Can be useful if the cards for left and right swipes may
+   * look very different and you don't want the user to see the
+   * next card flash between the two possible states.
+   */
+  preventVerticalDragging: PropTypes.bool
+};
+
+DynamicSwiper.defaultProps = {
+  preventVerticalDragging: false
 };
 
 export default DynamicSwiper;

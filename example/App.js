@@ -34,6 +34,7 @@ export default function App() {
             </View>
           )
         }
+        preventVerticalDragging={true}
       />
     </View>
   );

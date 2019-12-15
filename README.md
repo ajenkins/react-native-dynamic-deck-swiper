@@ -50,7 +50,7 @@ TODO
 | :-------------------- | :---------------------------------------- | :----------------------------------------------------------------- | :------- | :------ |
 | getNextCardData       | func({first, left, right, previousCards}) | return value is passed to renderCard as cardData for the next card | required |
 | renderCard            | func(cardData)                            | function to render the card based on the data                      | required |
-| preventVerticalMotion | bool                                      | enable/disable horizontal swiping                                  |          | true    |
+| preventVerticalDragging | bool                                      | enable/disable horizontal swiping                                  |          | true    |
 
 ### Event callbacks
 
