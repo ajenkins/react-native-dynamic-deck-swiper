@@ -5,12 +5,8 @@ import PropTypes from 'prop-types';
 import styles from './styles';
 
 // TODO - MUST HAVES:
-// Figure out how to let the user indicate that
-// they've reached the last card, which should not be
-// swipable.
 // Add proptypes to component
 // Add event callback props (onSwipe, onLastCardReached)
-// Remove red and blue backgrounds from styles
 
 // TODO: Calculate dimensions more dynamically
 const { width } = Dimensions.get('window');
