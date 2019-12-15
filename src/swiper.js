@@ -9,7 +9,7 @@ import styles from './styles';
 // swipable.
 // Update license, readme, package.json
 // Add proptypes to component
-// Add event callback props
+// Add event callback props (onSwipe, onLastCardReached)
 
 // TODO: Calculate dimensions more dynamically
 const { width } = Dimensions.get('window');
@@ -27,6 +27,9 @@ const nextCardProps = ({
 
 // TODO: Recursively createCardTree to improve performance
 // TODO: Write unit tests using RTL
+// TODO: Add prop for restricting vertical dragging
+// TODO: Add fancier animations, like tilting the card
+// and changing the size and opacity of the next card
 
 class DynamicSwiper extends React.Component {
   constructor(props) {
