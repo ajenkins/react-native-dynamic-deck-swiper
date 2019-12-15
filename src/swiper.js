@@ -11,6 +11,7 @@ import styles from './styles';
 // plane calls setSwipeDirection which changes the value
 // of swipeDirection and triggers a re-render, which then
 // resets the value of position back to the middle.
+// Try using useRef
 
 const { height, width } = Dimensions.get('window');
 
@@ -37,8 +38,8 @@ const DynamicSwiper = ({ getNextCardData, renderCard }) => {
 
   // For debugging
   useEffect(() => {
-    console.log(`top card is: ${JSON.stringify(topCardData)}`);
-  });
+    position.setValue({ x: 0, y: 0 });
+  }, [topCardData]);
 
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: (event, gestureState) => true,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 // import Swiper from 'react-native-dynamic-deck-swiper';
 import { Animated, Dimensions, PanResponder } from 'react-native';
@@ -18,102 +18,72 @@ const nextCardProps = ({
   previousCards
 });
 
-class Swiper extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      topCardData: this._getNextCardData({ first: true }),
-      previousCards: [],
-      swipeDirection: null,
-      index: 0 // This is temporary
-    };
-    this.position = new Animated.ValueXY();
-    this.panResponder = this.createPanResponder();
-    this.renderCards = this.renderCards.bind(this);
-    this.cards = [
-      'This is the first card',
-      'This is the second card',
-      'This is the third card',
-      'This is the fourth card'
-    ];
-  }
+const Swiper = ({ getNextCardData, renderCard }) => {
+  const _getNextCardData = (obj) => getNextCardData(nextCardProps(obj));
 
-  _getNextCardData(obj) {
-    return this.props.getNextCardData(nextCardProps(obj));
-  }
+  const [topCardData, setTopCardData] = useState(
+    _getNextCardData({ first: true })
+  );
+  const [previousCards, setPreviousCards] = useState([]);
+  const [swipeDirection, setSwipeDirection] = useState(null);
+  const position = useRef(new Animated.ValueXY()).current;
 
-  createPanResponder() {
-    return PanResponder.create({
-      onStartShouldSetPanResponder: (event, gestureState) => true,
-      onPanResponderMove: (event, gestureState) => {
-        this.position.setValue({ x: gestureState.dx, y: gestureState.dy });
-        if (gestureState.dx > 0) {
-          this.setState({ swipeDirection: 'right' });
-        } else if (gestureState.dx < 0) {
-          this.setState({ swipeDirection: 'left' });
-        }
-      },
-      onPanResponderRelease: (event, gestureState) => {
-        if (gestureState.dx > 120) {
-          Animated.spring(this.position, {
-            toValue: { x: width + 100, y: gestureState.dy }
-          }).start(() => {
-            this.setState({ index: this.state.index + 1 }, () => {
-              this.position.setValue({ x: 0, y: 0 });
-            });
-          });
-        } else if (gestureState.dx < -120) {
-          Animated.spring(this.position, {
-            toValue: { x: -width - 100, y: gestureState.dy }
-          }).start(() => {
-            this.setState({ index: this.state.index + 1 }, () => {
-              this.position.setValue({ x: 0, y: 0 });
-            });
-          });
-        } else {
-          Animated.spring(this.position, {
-            toValue: { x: 0, y: 0 },
-            friction: 4
-          }).start();
-        }
+  useEffect(() => {
+    console.log('resetting card position');
+    position.setValue({ x: 0, y: 0 });
+  }, [previousCards]);
+
+  const panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: (event, gestureState) => true,
+    onPanResponderMove: (event, gestureState) => {
+      position.setValue({ x: gestureState.dx, y: gestureState.dy });
+      if (gestureState.dx >= 0) {
+        setSwipeDirection('right');
+      } else if (gestureState.dx < 0) {
+        setSwipeDirection('left');
       }
-    });
-  }
+    },
+    onPanResponderRelease: (event, gestureState) => {
+      if (gestureState.dx > 120) {
+        Animated.spring(position, {
+          toValue: { x: width + 100, y: gestureState.dy }
+        }).start(() => {
+          setPreviousCards([...previousCards, topCardData]);
+          setTopCardData(_getNextCardData({ swipeDirection, previousCards }));
+        });
+      } else if (gestureState.dx < -120) {
+        Animated.spring(position, {
+          toValue: { x: -width - 100, y: gestureState.dy }
+        }).start(() => {
+          setPreviousCards([...previousCards, topCardData]);
+          setTopCardData(_getNextCardData({ swipeDirection, previousCards }));
+        });
+      } else {
+        Animated.spring(position, {
+          toValue: { x: 0, y: 0 },
+          friction: 4
+        }).start();
+      }
+    }
+  });
 
-  renderCards() {
-    console.log(this.state.index);
-    return this.cards
-      .map((card, i) => {
-        if (this.state.index > i) {
-          return null;
-        } else if (this.state.index === i) {
-          return (
-            <Animated.View
-              {...this.panResponder.panHandlers}
-              style={[
-                { transform: this.position.getTranslateTransform() },
-                styles.topCard
-              ]}
-              key={card}
-            >
-              {this.props.renderCard(card)}
-            </Animated.View>
-          );
-        } else {
-          return (
-            <Animated.View style={styles.nextCard} key={card}>
-              {this.props.renderCard(card)}
-            </Animated.View>
-          );
-        }
-      })
-      .reverse();
-  }
-
-  render() {
-    return this.renderCards();
-  }
-}
+  return (
+    <>
+      <Animated.View
+        {...panResponder.panHandlers}
+        style={[
+          { transform: position.getTranslateTransform() },
+          styles.topCard
+        ]}
+      >
+        {renderCard(topCardData)}
+      </Animated.View>
+      <View style={styles.nextCard}>
+        {renderCard(_getNextCardData({ swipeDirection, previousCards }))}
+      </View>
+    </>
+  );
+};
 // End of component
 
 export default function App() {
