@@ -44,16 +44,11 @@ const Swiper = ({ getNextCardData, renderCard }) => {
       }
     },
     onPanResponderRelease: (event, gestureState) => {
-      if (gestureState.dx > 120) {
+      if (gestureState.dx > 120 || gestureState.dx < -120) {
+        const offscreen = gestureState.dx > 0 ? width : -width;
         Animated.spring(position, {
-          toValue: { x: width + 100, y: gestureState.dy }
-        }).start(() => {
-          setPreviousCards([...previousCards, topCardData]);
-          setTopCardData(_getNextCardData({ swipeDirection, previousCards }));
-        });
-      } else if (gestureState.dx < -120) {
-        Animated.spring(position, {
-          toValue: { x: -width - 100, y: gestureState.dy }
+          toValue: { x: offscreen, y: gestureState.dy },
+          overshootClamping: true
         }).start(() => {
           setPreviousCards([...previousCards, topCardData]);
           setTopCardData(_getNextCardData({ swipeDirection, previousCards }));
