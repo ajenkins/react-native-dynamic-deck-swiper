@@ -7,6 +7,10 @@ export default function App() {
     <View style={styles.container}>
       <Swiper
         getNextCardData={({ first, left, right, previousCards }) => {
+          if (previousCards.length >= 10) {
+            // End of deck
+            return null;
+          }
           if (first) {
             return 'This is the first card. This is card #1.';
           } else if (left) {
@@ -17,11 +21,19 @@ export default function App() {
               1}.`;
           }
         }}
-        renderCard={(card) => (
-          <View style={styles.card}>
-            <Text style={styles.text}>{card}</Text>
-          </View>
-        )}
+        renderCard={(card) =>
+          card === null ? (
+            <View style={styles.card}>
+              <Text style={styles.text}>
+                You've reached the end of the deck, pal.
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.card}>
+              <Text style={styles.text}>{card}</Text>
+            </View>
+          )
+        }
       />
     </View>
   );

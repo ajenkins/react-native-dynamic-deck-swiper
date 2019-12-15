@@ -10,6 +10,7 @@ import styles from './styles';
 // swipable.
 // Add proptypes to component
 // Add event callback props (onSwipe, onLastCardReached)
+// Remove red and blue backgrounds from styles
 
 // TODO: Calculate dimensions more dynamically
 const { width } = Dimensions.get('window');
@@ -99,30 +100,31 @@ class DynamicSwiper extends React.Component {
   }
 
   render() {
-    return (
-      <>
-        <Animated.View
-          {...this.panResponder.panHandlers}
-          style={[
-            { transform: this.position.getTranslateTransform() },
-            styles.topCard
-          ]}
-        >
-          {this.props.renderCard(this.state.topCardData)}
-        </Animated.View>
-        <View style={styles.nextCard}>
-          {this.props.renderCard(
-            this._getNextCardData({
-              swipeDirection: this.state.swipeDirection,
-              previousCards: [
-                ...this.state.previousCards,
-                this.state.topCardData
-              ]
-            })
-          )}
-        </View>
-      </>
-    );
+    if (this.state.topCardData === null) {
+      // End of deck
+      return <View style={styles.topCard}>{this.props.renderCard(null)}</View>;
+    } else {
+      const nextCardData = this._getNextCardData({
+        swipeDirection: this.state.swipeDirection,
+        previousCards: [...this.state.previousCards, this.state.topCardData]
+      });
+      return (
+        <>
+          <Animated.View
+            {...this.panResponder.panHandlers}
+            style={[
+              { transform: this.position.getTranslateTransform() },
+              styles.topCard
+            ]}
+          >
+            {this.props.renderCard(this.state.topCardData)}
+          </Animated.View>
+          <View style={styles.nextCard}>
+            {this.props.renderCard(nextCardData)}
+          </View>
+        </>
+      );
+    }
   }
 }
 
@@ -153,7 +155,9 @@ DynamicSwiper.propTypes = {
    * Function called twice per component render: once for the current
    * top card and once for the current next card. Should return a React
    * element that will be rendered. The returned element should be styled
-   * because the component does very little of its own styling.
+   * because the component does very little of its own styling. Make
+   * sure your function handles the case where cardData is null if you
+   * don't want the last card to be blank.
    */
   renderCard: PropTypes.func.isRequired
 };
