@@ -1,7 +1,22 @@
 ## react-native-dynamic-deck-swiper
 
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
-[![npm version](https://badge.fury.io/js/react-native-deck-swiper.svg)](https://badge.fury.io/js/react-native-deck-swiper)
+## Overview
+
+This is a React Native component for creating a Tinder-like deck swiper where
+you can specify the next card based on the user's swipe direction and the previous
+cards, instead of needing to initialize the component with the whole deck upfront.
+
+### Example use case
+
+Imagine you want to build an interactive card swiping game,
+like [Reigns on iOS](https://apps.apple.com/us/app/reigns/id1114127463).
+Maybe the user has to navigate a maze using left and right swipes.
+In this case, you can't specify the full, linear deck of cards because
+the next card shown depends on which direction the user swiped. Using this
+component you would pass a function into the getNextCardData prop that returns
+the data for the next card based on which direction the user swiped.
+
+See below for a code example.
 
 ## Installation
 
@@ -9,60 +24,47 @@
 npm install react-native-dynamic-deck-swiper --save
 ```
 
-## Overview
+## Prior Work
 
-- [x] (NEW) Dynamically set next card
-- [x] Rotation animation
-- [x] Opacity animation
-- [x] Zoom animation
-- [x] Overlay labels
-- [x] Show next card while swiping
-- [x] Swipe event callbacks
-- [x] Trigger swipe animations programmatically
-- [x] Jump to a card index
-- [x] Swipe to previous card
-- [x] Underlaying cards offset
-- [x] Never-ending, animated deck when infinite property is true
-- [x] Swipe back to previous card with a custom animation
+The code for this component is adapted from the tutorial created by Unsure Programmer (Varun Nath).
+
+[Tutorial on YouTube](https://youtu.be/MDAdY2LkP_U)
+
+[Link to code on GitHub](https://github.com/nathvarun/React-Native-Layout-Tutorial-Series/tree/master/Project%20Files/12%20Tinder%20Swipe%20Deck)
+
+If you're looking for a more fully featured deck swiper, or if you don't
+need to set the next card dynamically, check out the great component
+from alexbrilliant,
+[react-native-deck-swiper](https://github.com/alexbrillant/react-native-deck-swiper),
+which inspired the name and props of this component.
 
 ## Preview
 
-![App preview](/animation.gif)
-![App preview2](/animation2.gif)
+TODO
 
 ## Props
 
 ### Card props
 
-| Props           | type                                      | description                                                          | required | default |
-| :-------------- | :---------------------------------------- | :------------------------------------------------------------------- | :------- | :------ |
-| cards           | array                                     | array of data for the cards to be rendered                           |          |
-| nextCard        | func({first, left, right, previousCards}) | return value is passed to renderCard as cardData for the next card   |          |
-| renderCard      | func(cardData, cardIndex)                 | function to render the card based on the data                        | required |
-| keyExtractor    | func(cardData)                            | function to get the card's react key                                 |          | null    |
-| cardIndex       | number                                    | cardIndex to start with                                              |          | 0       |
-| infinite        | bool                                      | keep swiping indefinitely                                            |          | false   |
-| horizontalSwipe | bool                                      | enable/disable horizontal swiping                                    |          | true    |
-| verticalSwipe   | bool                                      | enable/disable vertical swiping                                      |          | true    |
-| showSecondCard  | bool                                      | enable/disable second card while swiping                             |          | true    |
-| stackSize       | number                                    | number of underlaying cards to show (showSecondCard must be enabled) |          | 0       |
+| Props                 | type                                      | description                                                        | required | default |
+| :-------------------- | :---------------------------------------- | :----------------------------------------------------------------- | :------- | :------ |
+| getNextCardData       | func({first, left, right, previousCards}) | return value is passed to renderCard as cardData for the next card | required |
+| renderCard            | func(cardData)                            | function to render the card based on the data                      | required |
+| preventVerticalMotion | bool                                      | enable/disable horizontal swiping                                  |          | true    |
 
 ### Event callbacks
 
-| Props             | type   | description                                                                           | default |
-| :---------------- | :----- | :------------------------------------------------------------------------------------ | :------ |
-| onSwipedAll       | func   | function to be called when all cards have been swiped                                 |         | () => {} |
-| onSwiped          | func   | function to be called when a card is swiped. it receives the swiped card index        |         | (cardIndex) => {} |
-| onSwipedAborted   | func   | function to be called when a card is released before reaching the threshold           |         | () => {} |
-| onSwipedLeft      | func   | function to be called when a card is swiped left. it receives the swiped card index   |         | (cardIndex) => {} |
-| onSwipedRight     | func   | function to be called when a card is swiped right. it receives the swiped card index  |         | (cardIndex) => {} |
-| onSwipedTop       | func   | function to be called when a card is swiped top. it receives the swiped card index    |         | (cardIndex) => {} |
-| onSwipedBottom    | func   | function to be called when a card is swiped bottom. it receives the swiped card index |         | (cardIndex) => {} |
-| onSwiping         | func   | function to be called when a card is being moved. it receives X and Y positions       |         | (x, y) => {} |
-| dragStart         | func   | function to be called when drag start                                                 |         |
-| dragEnd           | func   | function to be called when drag end                                                   |
-| onTapCard         | func   | function to be called when tapping a card. it receives the tapped card index          |         | (cardIndex) => {} |
-| onTapCardDeadZone | number | maximum amount of movement before a tap is no longer recognized as a tap              | 5       |
+| Props           | type | description                                                                          | default |
+| :-------------- | :--- | :----------------------------------------------------------------------------------- | :------ |
+| onSwipedAll     | func | function to be called when all cards have been swiped                                |         | () => {} |
+| onSwiped        | func | function to be called when a card is swiped. it receives the swiped card index       |         | (cardIndex) => {} |
+| onSwipedAborted | func | function to be called when a card is released before reaching the threshold          |         | () => {} |
+| onSwipedLeft    | func | function to be called when a card is swiped left. it receives the swiped card index  |         | (cardIndex) => {} |
+| onSwipedRight   | func | function to be called when a card is swiped right. it receives the swiped card index |         | (cardIndex) => {} |
+| onSwiping       | func | function to be called when a card is being moved. it receives X and Y positions      |         | (x, y) => {} |
+| dragStart       | func | function to be called when drag start                                                |         |
+| dragEnd         | func | function to be called when drag end                                                  |
+| onTapCard       | func | function to be called when tapping a card. it receives the tapped card index         |         | (cardIndex) => {} |
 
 ### Swipe animation props
 
@@ -71,10 +73,8 @@ npm install react-native-dynamic-deck-swiper --save
 | verticalThreshold      | number | vertical swipe threshold        | height / 5 |
 | horizontalThreshold    | number | horizontal swipe threshold      | width / 4  |
 | swipeAnimationDuration | number | duration of the swipe animation | 350        |
-| disableBottomSwipe     | bool   | disable bottom swipe            | false      |
 | disableLeftSwipe       | bool   | disable left swipe              | false      |
 | disableRightSwipe      | bool   | disable right swipe             | false      |
-| disableTopSwipe        | bool   | disable top swipe               | false      |
 
 ### Stack props
 
@@ -283,46 +283,35 @@ To trigger imperative animations, you can use a reference to the Swiper componen
 ## Usage example
 
 ```javascript
-render () {
+import Swiper from 'react-native-dynamic-deck-swiper';
+
+function MyDynamicSwiper() {
+  return (
     <View style={styles.container}>
-        <Swiper
-	    	nextCard={({first, left, right, previousCards}) => {
-	    		if (first) {
-					return 'DO'
-				}
-				if (previousCards.length > 3) {
-					return 'WHAT'
-				}
-				if (left) {
-					return 'MORE'
-				}
-				if (right) {
-					return 'OF'
-				}
-	    	}}
-            renderCard={(card) => {
-                return (
-                    <View style={styles.card}>
-                        <Text style={styles.text}>{card}</Text>
-                    </View>
-                )
-            }}
-            onSwiped={(cardIndex) => {console.log(cardIndex)}}
-            onSwipedAll={() => {console.log('onSwipedAll')}}
-            cardIndex={0}
-            backgroundColor={'#4FD0E9'}
-            stackSize= {3}>
-            <Button
-                onPress={() => {console.log('oulala')}}
-                title="Press me">
-                You can press me
-            </Button>
-        </Swiper>
+      <Swiper
+        getNextCardData={({ first, left, right, previousCards }) => {
+          if (first) {
+            return 'This is the first card. This is card #1.';
+          } else if (left) {
+            return `You swiped to the left. This is card #${previousCards.length +
+              1}.`;
+          } else if (right) {
+            return `You swiped to the right. This is card #${previousCards.length +
+              1}.`;
+          }
+        }}
+        renderCard={(cardData) => (
+          <View style={styles.card}>
+            <Text style={styles.text}>{cardData}</Text>
+          </View>
+        )}
+      />
     </View>
+  );
 }
 ```
 
-Demo inside the [example Folder](https://github.com/ajenkins/react-native-dynamic-deck-swiper/tree/master/example)
+Runnable demo inside the [example Folder](https://github.com/ajenkins/react-native-dynamic-deck-swiper/tree/master/example)
 
 ## Stylesheet example
 
@@ -338,7 +327,13 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#E8E8E8',
     justifyContent: 'center',
-    backgroundColor: 'white'
+    backgroundColor: 'turquoise',
+    marginTop: 60,
+    marginBottom: 60,
+    marginLeft: 30,
+    marginRight: 30,
+    borderRadius: 30,
+    padding: 10
   },
   text: {
     textAlign: 'center',
@@ -369,4 +364,3 @@ For specific usage info, see the [Expo CLI docs](https://docs.expo.io/versions/l
 1. Then run `npm start`.
 
 Don't forget to bump project and example versions in package.json whenever you submit a PR.
-Also, please delete all outdated .tgz files. Only the latest version should be kept in source control.
