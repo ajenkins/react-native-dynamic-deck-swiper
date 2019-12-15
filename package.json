@@ -26,7 +26,7 @@
     "expo"
   ],
   "author": "AJ Jenkins",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ajenkins/react-native-dynamic-deck-swiper/issues"
   },
@@ -36,7 +36,6 @@
     "react-native": "^0.61.5"
   },
   "dependencies": {
-    "lodash": "^4.17.15",
     "prop-types": "^15.7.2"
   }
 }
