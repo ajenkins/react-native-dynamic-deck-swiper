@@ -1,5 +1,6 @@
 import React from 'react';
 import { Animated, Dimensions, PanResponder, View } from 'react-native';
+import PropTypes from 'prop-types';
 
 import styles from './styles';
 
@@ -7,7 +8,6 @@ import styles from './styles';
 // Figure out how to let the user indicate that
 // they've reached the last card, which should not be
 // swipable.
-// Update license, readme, package.json
 // Add proptypes to component
 // Add event callback props (onSwipe, onLastCardReached)
 
@@ -125,5 +125,37 @@ class DynamicSwiper extends React.Component {
     );
   }
 }
+
+DynamicSwiper.propTypes = {
+  /**
+   * Function signature:
+   * ({first, left, right, previousCards}) => (nextCardData)
+   * first: bool - true for top card only
+   * left: bool - true if the user swiped left
+   * right: bool - true if the user swiped right
+   * previousCards: array - array of the cardData for all swiped cards
+   * nextCardData: any - will be supplied as input to renderCard prop
+   *
+   * Function will be called once every time the user drags the top
+   * card across the midline of the screen. One of first, left, or right
+   * will be true whenever the function is called. Function should
+   * return the data that should be passed into renderCard for rendering
+   * the next card based on the input parameters to the function.
+   * To indicate that the end of the deck has been reached, return
+   * null from this function.
+   */
+  getNextCardData: PropTypes.func.isRequired,
+  /**
+   * Function signature:
+   * (cardData) => <ReactElement />
+   * cardData: any - whatever was returned by getNextCardData
+   *
+   * Function called twice per component render: once for the current
+   * top card and once for the current next card. Should return a React
+   * element that will be rendered. The returned element should be styled
+   * because the component does very little of its own styling.
+   */
+  renderCard: PropTypes.func.isRequired
+};
 
 export default DynamicSwiper;
