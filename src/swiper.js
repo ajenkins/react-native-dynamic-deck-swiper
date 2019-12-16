@@ -4,9 +4,6 @@ import PropTypes from 'prop-types';
 
 import styles from './styles';
 
-// TODO - MUST HAVES:
-// Add event callback props (onSwipe, onLastCardReached)
-
 // TODO: Calculate dimensions more dynamically
 // https://facebook.github.io/react-native/docs/dimensions#get
 const { width } = Dimensions.get('window');
