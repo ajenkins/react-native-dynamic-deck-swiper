@@ -40,7 +40,7 @@ which inspired the name and props of this component.
 
 ## Preview
 
-TODO
+![App preview](/preview.gif)
 
 ## Props
 
