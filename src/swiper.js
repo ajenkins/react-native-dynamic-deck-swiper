@@ -19,11 +19,6 @@ const nextCardProps = ({
   previousCards
 });
 
-// TODO: Recursively createCardTree to improve performance
-// TODO: Write unit tests using RTL
-// TODO: Add fancier animations, like tilting the card
-// and changing the size and opacity of the next card
-
 class DynamicSwiper extends React.Component {
   constructor(props) {
     super(props);
