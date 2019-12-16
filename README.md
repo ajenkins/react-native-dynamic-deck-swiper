@@ -62,16 +62,16 @@ _See component propTypes in the source code for additional usage info._
 
 ### Event callbacks
 
-| Props           | type | description                                                                            | Signature                       |
-| :-------------- | :--- | :------------------------------------------------------------------------------------- | :------------------------------ |
-| onEndReached    | func | function to be called when all cards have been swiped                                  | () => {}                        |
-| onSwiped        | func | function to be called when a card is swiped. it receives the swiped card and direction | (cardData, {left, right}) => {} |
-| onSwipedAborted | func | function to be called when a card is released before reaching the threshold            | () => {}                        |
-| onSwipedLeft    | func | function to be called when a card is swiped left. it receives the swiped card index    | (cardData) => {}                |
-| onSwipedRight   | func | function to be called when a card is swiped right. it receives the swiped card index   | (cardData) => {}                |
-| onDragging      | func | function to be called while a card is being moved. it receives X and Y positions       | (x, y) => {}                    |
-| onDragStart     | func | function to be called when drag start                                                  |                                 |
-| onDragEnd       | func | function to be called when drag end                                                    |                                 |
+| Props          | type | description                                                                            | Signature                       |
+| :------------- | :--- | :------------------------------------------------------------------------------------- | :------------------------------ |
+| onEndReached   | func | function to be called when all cards have been swiped                                  | () => {}                        |
+| onSwiped       | func | function to be called when a card is swiped. it receives the swiped card and direction | (cardData, {left, right}) => {} |
+| onSwipeAborted | func | function to be called when a card is released before reaching the threshold            | () => {}                        |
+| onSwipedLeft   | func | function to be called when a card is swiped left. it receives the swiped card index    | (cardData) => {}                |
+| onSwipedRight  | func | function to be called when a card is swiped right. it receives the swiped card index   | (cardData) => {}                |
+| onDragging     | func | function to be called while a card is being moved. it receives X and Y positions       | (x, y) => {}                    |
+| onDragStart    | func | function to be called when drag start                                                  |                                 |
+| onDragEnd      | func | function to be called when drag end                                                    |                                 |
 
 ## Usage example
 

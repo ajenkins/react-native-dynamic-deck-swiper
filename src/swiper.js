@@ -53,20 +53,36 @@ class DynamicSwiper extends React.Component {
     return PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove: (e, gestureState) => {
+        this.props.onDragging(gestureState.dx, gestureState.dy);
+
+        // Move card
         if (this.props.preventVerticalDragging) {
           this.position.setValue({ x: gestureState.dx, y: 0 });
         } else {
           this.position.setValue({ x: gestureState.dx, y: gestureState.dy });
         }
 
+        // Update state based on current card location
         if (gestureState.dx > 0) {
           this.setState({ swipeDirection: 'right' });
         } else if (gestureState.dx < 0) {
           this.setState({ swipeDirection: 'left' });
         }
       },
+      onPanResponderGrant: () => {
+        this.props.onDragStart();
+      },
       onPanResponderRelease: (e, gestureState) => {
-        if (gestureState.dx > 120 || gestureState.dx < -120) {
+        this.props.onDragEnd();
+        const threshold = this.props.horizontalThreshold;
+        if (gestureState.dx > threshold || gestureState.dx < -threshold) {
+          // Trigger event callbacks
+          this.props.onSwiped(this.state.topCardData);
+          gestureState.dx > 0
+            ? this.props.onSwipedRight(this.state.topCardData)
+            : this.props.onSwipedLeft(this.state.topCardData);
+
+          // Animate swipe then update state
           const offscreen = gestureState.dx > 0 ? width : -width;
           Animated.spring(this.position, {
             toValue: { x: offscreen, y: gestureState.dy },
@@ -90,6 +106,8 @@ class DynamicSwiper extends React.Component {
             );
           });
         } else {
+          // Swipe aborted
+          this.props.onSwipeAborted(this.state.topCardData);
           Animated.spring(this.position, {
             toValue: { x: 0, y: 0 },
             friction: 4
@@ -102,6 +120,7 @@ class DynamicSwiper extends React.Component {
   render() {
     if (this.state.topCardData === null) {
       // End of deck
+      this.props.onEndReached();
       return <View style={styles.topCard}>{this.props.renderCard(null)}</View>;
     } else {
       const nextCardData = this._getNextCardData({
@@ -187,7 +206,7 @@ DynamicSwiper.propTypes = {
    * the horizontalThreshold values. Called with the
    * cardData for the card that was being dragged.
    */
-  onSwipedAborted: PropTypes.func,
+  onSwipeAborted: PropTypes.func,
   /**
    * Called after a card is swiped to the left.
    * Called with the cardData for the card that was swiped.
@@ -200,7 +219,7 @@ DynamicSwiper.propTypes = {
   onSwipedRight: PropTypes.func,
   /**
    * Called continuously while a card is being dragged.
-   * Called with the cardData for the card.
+   * Called with two arguments, x and y of the card position.
    */
   onDragging: PropTypes.func,
   /**
@@ -217,7 +236,15 @@ DynamicSwiper.propTypes = {
 
 DynamicSwiper.defaultProps = {
   preventVerticalDragging: false,
-  horizontalThreshold: width / 4
+  horizontalThreshold: width / 4,
+  onEndReached: () => {},
+  onSwiped: () => {},
+  onSwipedAborted: () => {},
+  onSwipedLeft: () => {},
+  onSwipedRight: () => {},
+  onDragging: () => {},
+  onDragStart: () => {},
+  onDragEnd: () => {}
 };
 
 export default DynamicSwiper;
