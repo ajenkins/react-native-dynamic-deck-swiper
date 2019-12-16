@@ -34,7 +34,15 @@ export default function App() {
             </View>
           )
         }
-        preventVerticalDragging={true}
+        preventVerticalDragging={false}
+        onEndReached={() => console.log('end reached')}
+        onSwiped={() => console.log('card swiped')}
+        onSwipeAborted={() => console.log('swipe aborted')}
+        onSwipedLeft={() => console.log('left swipe')}
+        onSwipedRight={() => console.log('right swipe')}
+        onDragging={(x, y) => console.log(`${x}, ${y}`)}
+        onDragStart={() => console.log('begin drag')}
+        onDragEnd={() => console.log('finish drag')}
       />
     </View>
   );
