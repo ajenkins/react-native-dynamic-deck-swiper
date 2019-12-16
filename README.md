@@ -83,6 +83,10 @@ function MyDynamicSwiper() {
     <View style={styles.container}>
       <Swiper
         getNextCardData={({ first, left, right, previousCards }) => {
+          if (previousCards.length >= 10) {
+            // End of deck
+            return null;
+          }
           if (first) {
             return 'This is the first card. This is card #1.';
           } else if (left) {
@@ -93,11 +97,19 @@ function MyDynamicSwiper() {
               1}.`;
           }
         }}
-        renderCard={(cardData) => (
-          <View style={styles.card}>
-            <Text style={styles.text}>{cardData}</Text>
-          </View>
-        )}
+        renderCard={(card) =>
+          card === null ? (
+            <View style={styles.card}>
+              <Text style={styles.text}>
+                You've reached the end of the deck, pal.
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.card}>
+              <Text style={styles.text}>{card}</Text>
+            </View>
+          )
+        }
       />
     </View>
   );
