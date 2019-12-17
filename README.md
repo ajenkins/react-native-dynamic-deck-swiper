@@ -1,4 +1,4 @@
-## react-native-dynamic-deck-swiper
+# react-native-dynamic-deck-swiper
 
 ## Overview
 
