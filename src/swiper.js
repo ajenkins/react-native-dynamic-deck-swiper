@@ -1,7 +1,8 @@
 import React from 'react';
-import { Animated, Dimensions, PanResponder, View } from 'react-native';
+import { Animated, Dimensions, View } from 'react-native';
 import PropTypes from 'prop-types';
 
+import createPanResponder from './panresponder';
 import styles from './styles';
 
 // TODO: Calculate dimensions more dynamically
@@ -32,7 +33,13 @@ class DynamicSwiper extends React.Component {
       swipeDirection: null
     };
     this.position = new Animated.ValueXY();
-    this.panResponder = this.createPanResponder();
+    this.panResponder = createPanResponder(
+      props,
+      this.state,
+      this.position,
+      this.setState,
+      this._getNextCardData
+    );
   }
 
   _getNextCardData(obj) {
@@ -43,97 +50,6 @@ class DynamicSwiper extends React.Component {
     if (this.state.previousCards.length !== prevState.previousCards.length) {
       this.position.setValue({ x: 0, y: 0 });
     }
-  }
-
-  createPanResponder() {
-    return PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: (e, gestureState) => {
-        this.props.onDragging(gestureState.dx, gestureState.dy);
-
-        // Move card
-        if (this.props.preventVerticalDragging) {
-          this.position.setValue({ x: gestureState.dx, y: 0 });
-        } else {
-          this.position.setValue({ x: gestureState.dx, y: gestureState.dy });
-        }
-
-        // Update state based on current card location
-        if (
-          Math.abs(gestureState.dx) / width >=
-          Math.abs(gestureState.dy) / height
-        ) {
-          if (gestureState.dx > 0) {
-            this.setState({ swipeDirection: RIGHT });
-          } else if (gestureState.dx < 0) {
-            this.setState({ swipeDirection: LEFT });
-          }
-        } else {
-          if (gestureState.dy > 0) {
-            this.setState({ swipeDirection: UP });
-          } else if (gestureState.dy < 0) {
-            this.setState({ swipeDirection: DOWN });
-          }
-        }
-      },
-      onPanResponderGrant: () => {
-        this.props.onDragStart();
-      },
-      onPanResponderRelease: (e, gestureState) => {
-        this.props.onDragEnd();
-
-        const leftSwipe =
-          gestureState.dx < -this.props.horizontalThreshold &&
-          !this.props.disableSwipeLeft;
-        const rightSwipe =
-          gestureState.dx > this.props.horizontalThreshold &&
-          !this.props.disableSwipeRight;
-        const upSwipe =
-          gestureState.dy > this.props.verticalThreshold &&
-          !this.props.disableSwipeUp;
-        const downSwipe =
-          gestureState.dy < -this.props.verticalThreshold &&
-          !this.props.disableSwipeDown;
-        if (leftSwipe || rightSwipe || upSwipe || downSwipe) {
-          // Trigger event callbacks
-          this.props.onSwiped(this.state.topCardData);
-          gestureState.dx > 0
-            ? this.props.onSwipedRight(this.state.topCardData)
-            : this.props.onSwipedLeft(this.state.topCardData);
-
-          // Animate swipe then update state
-          const offscreen = gestureState.dx > 0 ? width : -width;
-          Animated.spring(this.position, {
-            toValue: { x: offscreen, y: gestureState.dy },
-            overshootClamping: true
-          }).start(() => {
-            this.setState(
-              {
-                previousCards: [
-                  ...this.state.previousCards,
-                  this.state.topCardData
-                ]
-              },
-              () => {
-                this.setState({
-                  topCardData: this._getNextCardData({
-                    swipeDirection: this.state.swipeDirection,
-                    previousCards: this.state.previousCards
-                  })
-                });
-              }
-            );
-          });
-        } else {
-          // Swipe aborted
-          this.props.onSwipeAborted(this.state.topCardData);
-          Animated.spring(this.position, {
-            toValue: { x: 0, y: 0 },
-            friction: 4
-          }).start();
-        }
-      }
-    });
   }
 
   render() {
