@@ -6,18 +6,14 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Swiper
-        getNextCardData={({ first, left, right, previousCards }) => {
+        getNextCardData={({ first, swipeDirection, previousCards }) => {
           if (previousCards.length >= 10) {
             // End of deck
             return null;
-          }
-          if (first) {
+          } else if (first) {
             return 'This is the first card. This is card #1.';
-          } else if (left) {
-            return `You swiped to the left. This is card #${previousCards.length +
-              1}.`;
-          } else if (right) {
-            return `You swiped to the right. This is card #${previousCards.length +
+          } else {
+            return `You swiped to the ${swipeDirection}. This is card #${previousCards.length +
               1}.`;
           }
         }}

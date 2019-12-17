@@ -6,7 +6,8 @@ import styles from './styles';
 
 // TODO: Calculate dimensions more dynamically
 // https://facebook.github.io/react-native/docs/dimensions#get
-const { width } = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
+const [LEFT, RIGHT, UP, DOWN] = ['left', 'right', 'up', 'down'];
 
 const nextCardProps = ({
   first = false,
@@ -14,8 +15,11 @@ const nextCardProps = ({
   previousCards = []
 }) => ({
   first,
-  left: swipeDirection == 'left',
-  right: swipeDirection == 'right',
+  left: swipeDirection == LEFT,
+  right: swipeDirection == RIGHT,
+  up: swipeDirection == UP,
+  down: swipeDirection == DOWN,
+  swipeDirection,
   previousCards
 });
 
@@ -55,10 +59,21 @@ class DynamicSwiper extends React.Component {
         }
 
         // Update state based on current card location
-        if (gestureState.dx > 0) {
-          this.setState({ swipeDirection: 'right' });
-        } else if (gestureState.dx < 0) {
-          this.setState({ swipeDirection: 'left' });
+        if (
+          Math.abs(gestureState.dx) / width >=
+          Math.abs(gestureState.dy) / height
+        ) {
+          if (gestureState.dx > 0) {
+            this.setState({ swipeDirection: RIGHT });
+          } else if (gestureState.dx < 0) {
+            this.setState({ swipeDirection: LEFT });
+          }
+        } else {
+          if (gestureState.dy > 0) {
+            this.setState({ swipeDirection: UP });
+          } else if (gestureState.dy < 0) {
+            this.setState({ swipeDirection: DOWN });
+          }
         }
       },
       onPanResponderGrant: () => {
@@ -66,8 +81,20 @@ class DynamicSwiper extends React.Component {
       },
       onPanResponderRelease: (e, gestureState) => {
         this.props.onDragEnd();
-        const threshold = this.props.horizontalThreshold;
-        if (gestureState.dx > threshold || gestureState.dx < -threshold) {
+
+        const leftSwipe =
+          gestureState.dx < -this.props.horizontalThreshold &&
+          !this.props.disableSwipeLeft;
+        const rightSwipe =
+          gestureState.dx > this.props.horizontalThreshold &&
+          !this.props.disableSwipeRight;
+        const upSwipe =
+          gestureState.dy > this.props.verticalThreshold &&
+          !this.props.disableSwipeUp;
+        const downSwipe =
+          gestureState.dy < -this.props.verticalThreshold &&
+          !this.props.disableSwipeDown;
+        if (leftSwipe || rightSwipe || upSwipe || downSwipe) {
           // Trigger event callbacks
           this.props.onSwiped(this.state.topCardData);
           gestureState.dx > 0
@@ -180,9 +207,30 @@ DynamicSwiper.propTypes = {
   preventVerticalDragging: PropTypes.bool,
   /**
    * How much the top card must be dragged for it
-   * to count as a swipe.
+   * to count as a left or right swipe.
    */
   horizontalThreshold: PropTypes.number,
+  /**
+   * How much the top card must be dragged for it
+   * to count as an up or down swipe.
+   */
+  verticalThreshold: PropTypes.number,
+  /**
+   * Prevent the user from swiping up.
+   */
+  disableSwipeUp: PropTypes.bool,
+  /**
+   * Prevent the user from swiping to the right.
+   */
+  disableSwipeRight: PropTypes.bool,
+  /**
+   * Prevent the user from swiping down.
+   */
+  disableSwipeDown: PropTypes.bool,
+  /**
+   * Prevent the user from swiping to the left.
+   */
+  disableSwipeLeft: PropTypes.bool,
   /**
    * Called (no arguments) once the end of the
    * deck has been reached.
@@ -229,6 +277,11 @@ DynamicSwiper.propTypes = {
 DynamicSwiper.defaultProps = {
   preventVerticalDragging: false,
   horizontalThreshold: width / 4,
+  verticalThreshold: height / 4,
+  disableSwipeUp: true,
+  disableSwipeRight: false,
+  disableSwipeDown: true,
+  disableSwipeLeft: false,
   onEndReached: () => {},
   onSwiped: () => {},
   onSwipedAborted: () => {},
