@@ -1,14 +1,18 @@
 import React from 'react';
-import { Animated, Dimensions, View } from 'react-native';
+import { Animated, Dimensions, PanResponder, View } from 'react-native';
 import PropTypes from 'prop-types';
 
-import createPanResponder from './panresponder';
+import { onPanResponderMove, onPanResponderRelease } from './panresponder';
 import styles from './styles';
+
+export const LEFT = 'left';
+export const RIGHT = 'right';
+export const UP = 'up';
+export const DOWN = 'down';
 
 // TODO: Calculate dimensions more dynamically
 // https://facebook.github.io/react-native/docs/dimensions#get
 const { height, width } = Dimensions.get('window');
-const [LEFT, RIGHT, UP, DOWN] = ['left', 'right', 'up', 'down'];
 
 const nextCardProps = ({
   first = false,
@@ -33,13 +37,7 @@ class DynamicSwiper extends React.Component {
       swipeDirection: null
     };
     this.position = new Animated.ValueXY();
-    this.panResponder = createPanResponder(
-      props,
-      this.state,
-      this.position,
-      this.setState,
-      this._getNextCardData
-    );
+    this.panResponder = this.createPanResponder();
   }
 
   _getNextCardData(obj) {
@@ -50,6 +48,29 @@ class DynamicSwiper extends React.Component {
     if (this.state.previousCards.length !== prevState.previousCards.length) {
       this.position.setValue({ x: 0, y: 0 });
     }
+  }
+
+  createPanResponder() {
+    return PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: (e, gestureState) => {
+        this.props.onDragging(gestureState.dx, gestureState.dy);
+        this.setState(onPanResponderMove(gestureState, this.position));
+      },
+      onPanResponderGrant: () => {
+        this.props.onDragStart();
+      },
+      onPanResponderRelease: (e, gestureState) => {
+        this.props.onDragEnd();
+        this.setState(
+          onPanResponderRelease(
+            gestureState,
+            this.position,
+            this._getNextCardData
+          )
+        );
+      }
+    });
   }
 
   render() {
