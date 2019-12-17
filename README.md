@@ -40,7 +40,7 @@ which inspired the name and props of this component.
 
 ## Preview
 
-![App preview](/preview.gif)
+![Swiper demo](https://media.giphy.com/media/ifXXjhgWopZ3tydglt/giphy.gif)
 
 ## Props
 
