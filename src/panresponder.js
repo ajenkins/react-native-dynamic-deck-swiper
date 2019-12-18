@@ -17,15 +17,15 @@ const onPanResponderMove = (gestureState, position) => (state, props) => {
   // Update state based on current card location
   if (Math.abs(gestureState.dx) / width >= Math.abs(gestureState.dy) / height) {
     if (gestureState.dx > 0) {
-      return { swipeDirection: RIGHT };
+      return props.disableSwipeRight ? {} : { swipeDirection: RIGHT };
     } else if (gestureState.dx < 0) {
-      return { swipeDirection: LEFT };
+      return props.disableSwipeLeft ? {} : { swipeDirection: LEFT };
     }
   } else {
     if (gestureState.dy > 0) {
-      return { swipeDirection: UP };
+      return props.disableSwipeDown ? {} : { swipeDirection: DOWN };
     } else if (gestureState.dy < 0) {
-      return { swipeDirection: DOWN };
+      return props.disableSwipeUp ? {} : { swipeDirection: UP };
     }
   }
 };
@@ -34,14 +34,11 @@ const onPanResponderRelease = (gestureState, position, _getNextCardData) => (
   state,
   props
 ) => {
-  const leftSwipe =
-    gestureState.dx < -props.horizontalThreshold && !props.disableSwipeLeft;
-  const rightSwipe =
-    gestureState.dx > props.horizontalThreshold && !props.disableSwipeRight;
-  const upSwipe =
-    gestureState.dy > props.verticalThreshold && !props.disableSwipeUp;
-  const downSwipe =
-    gestureState.dy < -props.verticalThreshold && !props.disableSwipeDown;
+  const leftSwipe = gestureState.dx < -props.horizontalThreshold;
+  const rightSwipe = gestureState.dx > props.horizontalThreshold;
+  const upSwipe = gestureState.dy > props.verticalThreshold;
+  const downSwipe = gestureState.dy < -props.verticalThreshold;
+  console.log(JSON.stringify({ leftSwipe, rightSwipe, upSwipe, downSwipe }));
   if (leftSwipe || rightSwipe || upSwipe || downSwipe) {
     // Trigger event callbacks
     props.onSwiped(state.topCardData);
