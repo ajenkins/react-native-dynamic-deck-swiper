@@ -62,13 +62,44 @@ class DynamicSwiper extends React.Component {
       },
       onPanResponderRelease: (e, gestureState) => {
         this.props.onDragEnd();
-        this.setState(
-          onPanResponderRelease(
-            gestureState,
-            this.position,
-            this._getNextCardData
-          )
-        );
+
+        const leftSwipe = gestureState.dx < -this.props.horizontalThreshold;
+        const rightSwipe = gestureState.dx > this.props.horizontalThreshold;
+        const upSwipe = gestureState.dy > this.props.verticalThreshold;
+        const downSwipe = gestureState.dy < -this.props.verticalThreshold;
+        if (leftSwipe || rightSwipe || upSwipe || downSwipe) {
+          // Trigger event callbacks
+          this.props.onSwiped(this.state.topCardData);
+          gestureState.dx > 0
+            ? this.props.onSwipedRight(this.state.topCardData)
+            : this.props.onSwipedLeft(this.state.topCardData);
+
+          // Animate swipe then update state
+          const offscreen = gestureState.dx > 0 ? width : -width;
+          Animated.spring(this.position, {
+            toValue: { x: offscreen, y: gestureState.dy },
+            overshootClamping: true
+          }).start(() => {
+            const newPreviousCards = [
+              ...this.state.previousCards,
+              this.state.topCardData
+            ];
+            this.setState({
+              topCardData: this._getNextCardData({
+                swipeDirection: this.state.swipeDirection,
+                previousCards: newPreviousCards
+              }),
+              previousCards: newPreviousCards
+            });
+          });
+        } else {
+          // Swipe aborted
+          this.props.onSwipeAborted(this.state.topCardData);
+          Animated.spring(this.position, {
+            toValue: { x: 0, y: 0 },
+            friction: 4
+          }).start();
+        }
       }
     });
   }
