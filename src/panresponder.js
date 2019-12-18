@@ -65,7 +65,7 @@ const onPanResponderMove = (gestureState, position) => (state, props) => {
     props.disableSwipeLeft,
     props.disableSwipeRight
   );
-  return { swipeDirection };
+  return swipeDirection ? { swipeDirection } : null;
 };
 
 /**
