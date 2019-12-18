@@ -2,7 +2,7 @@ import React from 'react';
 import { Animated, Dimensions, PanResponder, View } from 'react-native';
 import PropTypes from 'prop-types';
 
-import { onPanResponderMove, onPanResponderRelease } from './panresponder';
+import { onPanResponderMove, validSwipe } from './panresponder';
 import styles from './styles';
 
 export const LEFT = 'left';
@@ -63,26 +63,13 @@ class DynamicSwiper extends React.Component {
       },
       onPanResponderRelease: (e, gestureState) => {
         this.props.onDragEnd();
-
         this.releaseHelper(gestureState);
       }
     });
   }
 
   releaseHelper(gestureState) {
-    const leftSwipe =
-      gestureState.dx < -this.props.horizontalThreshold &&
-      !this.props.disableSwipeLeft;
-    const rightSwipe =
-      gestureState.dx > this.props.horizontalThreshold &&
-      !this.props.disableSwipeRight;
-    const downSwipe =
-      gestureState.dy > this.props.verticalThreshold &&
-      !this.props.disableSwipeDown;
-    const upSwipe =
-      gestureState.dy < -this.props.verticalThreshold &&
-      !this.props.disableSwipeUp;
-    if (leftSwipe || rightSwipe || upSwipe || downSwipe) {
+    if (validSwipe(this.props, gestureState.dx, gestureState.dy)) {
       // Trigger event callbacks
       this.props.onSwiped(this.state.topCardData);
       gestureState.dx > 0

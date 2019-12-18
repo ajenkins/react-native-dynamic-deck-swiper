@@ -68,45 +68,29 @@ const onPanResponderMove = (gestureState, position) => (state, props) => {
   return { swipeDirection };
 };
 
-const onPanResponderRelease = (gestureState, position, _getNextCardData) => (
-  state,
-  props
+/**
+ * Returns true if the card has been dragged beyond the threshold for
+ * that direction and in a direction for which swipes are enabled.
+ * @param {Object} props
+ * @returns {boolean}
+ */
+const validSwipe = (
+  {
+    horizontalThreshold,
+    verticalThreshold,
+    disableSwipeUp,
+    disableSwipeDown,
+    disableSwipeLeft,
+    disableSwipeRight
+  },
+  dx,
+  dy
 ) => {
-  const leftSwipe = gestureState.dx < -props.horizontalThreshold;
-  const rightSwipe = gestureState.dx > props.horizontalThreshold;
-  const upSwipe = gestureState.dy > props.verticalThreshold;
-  const downSwipe = gestureState.dy < -props.verticalThreshold;
-  console.log(JSON.stringify({ leftSwipe, rightSwipe, upSwipe, downSwipe }));
-  if (leftSwipe || rightSwipe || upSwipe || downSwipe) {
-    // Trigger event callbacks
-    props.onSwiped(state.topCardData);
-    gestureState.dx > 0
-      ? props.onSwipedRight(state.topCardData)
-      : props.onSwipedLeft(state.topCardData);
-
-    // Animate swipe then update state
-    const offscreen = gestureState.dx > 0 ? width : -width;
-    Animated.spring(position, {
-      toValue: { x: offscreen, y: gestureState.dy },
-      overshootClamping: true
-    }).start(() => {
-      const newPreviousCards = [...state.previousCards, state.topCardData];
-      return {
-        topCardData: _getNextCardData({
-          swipeDirection: state.swipeDirection,
-          previousCards: newPreviousCards
-        }),
-        previousCards: newPreviousCards
-      };
-    });
-  } else {
-    // Swipe aborted
-    props.onSwipeAborted(state.topCardData);
-    Animated.spring(position, {
-      toValue: { x: 0, y: 0 },
-      friction: 4
-    }).start();
-  }
+  const leftSwipe = dx < -horizontalThreshold && !disableSwipeLeft;
+  const rightSwipe = dx > horizontalThreshold && !disableSwipeRight;
+  const downSwipe = dy > verticalThreshold && !disableSwipeDown;
+  const upSwipe = dy < -verticalThreshold && !disableSwipeUp;
+  return leftSwipe || rightSwipe || downSwipe || upSwipe;
 };
 
-export { onPanResponderMove, onPanResponderRelease };
+export { onPanResponderMove, validSwipe };
