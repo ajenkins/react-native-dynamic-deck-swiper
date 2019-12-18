@@ -70,10 +70,18 @@ class DynamicSwiper extends React.Component {
   }
 
   releaseHelper(gestureState) {
-    const leftSwipe = gestureState.dx < -this.props.horizontalThreshold;
-    const rightSwipe = gestureState.dx > this.props.horizontalThreshold;
-    const upSwipe = gestureState.dy > this.props.verticalThreshold;
-    const downSwipe = gestureState.dy < -this.props.verticalThreshold;
+    const leftSwipe =
+      gestureState.dx < -this.props.horizontalThreshold &&
+      !this.props.disableSwipeLeft;
+    const rightSwipe =
+      gestureState.dx > this.props.horizontalThreshold &&
+      !this.props.disableSwipeRight;
+    const downSwipe =
+      gestureState.dy > this.props.verticalThreshold &&
+      !this.props.disableSwipeDown;
+    const upSwipe =
+      gestureState.dy < -this.props.verticalThreshold &&
+      !this.props.disableSwipeUp;
     if (leftSwipe || rightSwipe || upSwipe || downSwipe) {
       // Trigger event callbacks
       this.props.onSwiped(this.state.topCardData);
