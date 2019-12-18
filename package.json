@@ -1,6 +1,6 @@
 {
   "name": "react-native-dynamic-deck-swiper",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Tinder-like deck swiper React Native component that lets you dynamically set the next card.",
   "main": "index.js",
   "directories": {
