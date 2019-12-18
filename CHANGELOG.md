@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.3
+
+- Never set the swipeDirection to null, should always be one of the four directions.
+
 ## 0.0.2
 
 - Added support for swiping up or down
