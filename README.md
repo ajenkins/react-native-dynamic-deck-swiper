@@ -104,7 +104,8 @@ function MyDynamicSwiper() {
               1}.`;
           }
         }}
-        renderCard={(card) =>
+      >
+        {(card) =>
           card === null ? (
             <View style={styles.card}>
               <Text style={styles.text}>This is the end of the deck, pal.</Text>
@@ -115,7 +116,7 @@ function MyDynamicSwiper() {
             </View>
           )
         }
-      />
+      </Swiper>
     </View>
   );
 }
