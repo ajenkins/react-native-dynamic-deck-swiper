@@ -2,7 +2,11 @@ import React from 'react';
 import { Animated, Dimensions, PanResponder, View } from 'react-native';
 import PropTypes from 'prop-types';
 
-import { onPanResponderMove, validSwipe } from './panresponder';
+import {
+  calculateOffscreen,
+  onPanResponderMove,
+  validSwipe
+} from './panresponder';
 import styles from './styles';
 
 export const LEFT = 'left';
@@ -70,7 +74,7 @@ class DynamicSwiper extends React.Component {
 
   releaseHelper(gestureState) {
     if (validSwipe(this.props, gestureState.dx, gestureState.dy)) {
-      // Trigger event callbacks
+      // Trigger callback functions
       this.props.onSwiped(this.state.topCardData);
       switch (this.state.swipeDirection) {
         case UP:
@@ -88,9 +92,12 @@ class DynamicSwiper extends React.Component {
       }
 
       // Animate swipe then update state
-      const offscreen = gestureState.dx > 0 ? width : -width;
       Animated.spring(this.position, {
-        toValue: { x: offscreen, y: gestureState.dy },
+        toValue: calculateOffscreen(
+          this.state.swipeDirection,
+          gestureState.dx,
+          gestureState.dy
+        ),
         overshootClamping: true
       }).start(() => {
         const newPreviousCards = [

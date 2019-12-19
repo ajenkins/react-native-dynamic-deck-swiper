@@ -93,4 +93,25 @@ const validSwipe = (
   return leftSwipe || rightSwipe || downSwipe || upSwipe;
 };
 
-export { onPanResponderMove, validSwipe };
+/**
+ * Returns where the card should be "thrown" based on the
+ * current swipe direction and gestureState offset.
+ * Throws the card directly away from the center the minimum
+ * distance required to get it completely offscreen.
+ * @param {String} swipeDirection
+ * @returns {{x, y}}
+ */
+const calculateOffscreen = (swipeDirection, dx, dy) => {
+  switch (swipeDirection) {
+    case UP:
+      return { x: (dx * height) / -dy, y: -height };
+    case DOWN:
+      return { x: (dx * height) / dy, y: height };
+    case LEFT:
+      return { x: -width, y: (dy * width) / -dx };
+    case RIGHT:
+      return { x: width, y: (dy * width) / dx };
+  }
+};
+
+export { calculateOffscreen, onPanResponderMove, validSwipe };
