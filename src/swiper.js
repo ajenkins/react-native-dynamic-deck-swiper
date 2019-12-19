@@ -72,9 +72,20 @@ class DynamicSwiper extends React.Component {
     if (validSwipe(this.props, gestureState.dx, gestureState.dy)) {
       // Trigger event callbacks
       this.props.onSwiped(this.state.topCardData);
-      gestureState.dx > 0
-        ? this.props.onSwipedRight(this.state.topCardData)
-        : this.props.onSwipedLeft(this.state.topCardData);
+      switch (this.state.swipeDirection) {
+        case UP:
+          this.props.onSwipedUp(this.state.topCardData);
+          break;
+        case DOWN:
+          this.props.onSwipedDown(this.state.topCardData);
+          break;
+        case LEFT:
+          this.props.onSwipedLeft(this.state.topCardData);
+          break;
+        case RIGHT:
+          this.props.onSwipedRight(this.state.topCardData);
+          break;
+      }
 
       // Animate swipe then update state
       const offscreen = gestureState.dx > 0 ? width : -width;
@@ -255,6 +266,8 @@ DynamicSwiper.defaultProps = {
   onSwipedAborted: () => {},
   onSwipedLeft: () => {},
   onSwipedRight: () => {},
+  onSwipedUp: () => {},
+  onSwipedDown: () => {},
   onDragging: () => {},
   onDragStart: () => {},
   onDragEnd: () => {}

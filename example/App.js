@@ -36,9 +36,10 @@ export default function App() {
         onSwipeAborted={() => console.log('swipe aborted')}
         onSwipedLeft={() => console.log('left swipe')}
         onSwipedRight={() => console.log('right swipe')}
-        onDragging={(x, y) => console.log(`${x}, ${y}`)}
         onDragStart={() => console.log('begin drag')}
         onDragEnd={() => console.log('finish drag')}
+        disableSwipeUp={false}
+        disableSwipeDown={false}
       />
     </View>
   );

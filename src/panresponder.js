@@ -1,4 +1,4 @@
-import { Animated, Dimensions, PanResponder } from 'react-native';
+import { Dimensions } from 'react-native';
 
 import { LEFT, RIGHT, UP, DOWN } from './swiper';
 
@@ -40,7 +40,7 @@ const getSwipeDirection = (
   }
   if (potentialDirections.length) {
     const sortedDirections = potentialDirections.sort(
-      (a, b) => a.offset - b.offset
+      (a, b) => b.offset - a.offset
     );
     return sortedDirections[0].dir;
   } else {
