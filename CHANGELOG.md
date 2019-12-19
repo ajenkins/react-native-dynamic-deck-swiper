@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.4
+
+- Bugfixes for vertical swiping and better animations
+
 ## 0.0.3
 
 - Never set the swipeDirection to null, should always be one of the four directions.
