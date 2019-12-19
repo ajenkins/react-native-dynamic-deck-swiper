@@ -17,7 +17,18 @@ export default function App() {
               1}.`;
           }
         }}
-        renderCard={(card) =>
+        preventVerticalDragging={false}
+        onEndReached={() => console.log('end reached')}
+        onSwiped={() => console.log('card swiped')}
+        onSwipeAborted={() => console.log('swipe aborted')}
+        onSwipedLeft={() => console.log('left swipe')}
+        onSwipedRight={() => console.log('right swipe')}
+        onDragStart={() => console.log('begin drag')}
+        onDragEnd={() => console.log('finish drag')}
+        disableSwipeUp={false}
+        disableSwipeDown={false}
+      >
+        {(card) =>
           card === null ? (
             <View style={styles.card}>
               <Text style={styles.text}>
@@ -30,17 +41,7 @@ export default function App() {
             </View>
           )
         }
-        preventVerticalDragging={false}
-        onEndReached={() => console.log('end reached')}
-        onSwiped={() => console.log('card swiped')}
-        onSwipeAborted={() => console.log('swipe aborted')}
-        onSwipedLeft={() => console.log('left swipe')}
-        onSwipedRight={() => console.log('right swipe')}
-        onDragStart={() => console.log('begin drag')}
-        onDragEnd={() => console.log('finish drag')}
-        disableSwipeUp={false}
-        disableSwipeDown={false}
-      />
+      </Swiper>
     </View>
   );
 }

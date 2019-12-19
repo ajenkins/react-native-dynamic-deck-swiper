@@ -126,7 +126,7 @@ class DynamicSwiper extends React.Component {
     if (this.state.topCardData === null) {
       // End of deck
       this.props.onEndReached();
-      return <View style={styles.topCard}>{this.props.renderCard(null)}</View>;
+      return <View style={styles.topCard}>{this.props.children(null)}</View>;
     } else {
       const nextCardData = this._getNextCardData({
         swipeDirection: this.state.swipeDirection,
@@ -141,10 +141,10 @@ class DynamicSwiper extends React.Component {
               styles.topCard
             ]}
           >
-            {this.props.renderCard(this.state.topCardData)}
+            {this.props.children(this.state.topCardData)}
           </Animated.View>
           <View style={styles.nextCard}>
-            {this.props.renderCard(nextCardData)}
+            {this.props.children(nextCardData)}
           </View>
         </>
       );
@@ -160,13 +160,13 @@ DynamicSwiper.propTypes = {
    * left: bool - true if the user swiped left
    * right: bool - true if the user swiped right
    * previousCards: array - array of the cardData for all swiped cards
-   * nextCardData: any - will be supplied as input to renderCard prop
+   * nextCardData: any - will be supplied as input to children render prop
    *
    * Function will be called once every time the user drags the top
    * card across the midline of the screen. One of first, left, or right
    * will be true whenever the function is called. Function should
-   * return the data that should be passed into renderCard for rendering
-   * the next card based on the input parameters to the function.
+   * return the data that should be passed into the children function for
+   * rendering the next card based on the input parameters to the function.
    * To indicate that the end of the deck has been reached, return
    * null from this function.
    */
@@ -183,7 +183,7 @@ DynamicSwiper.propTypes = {
    * sure your function handles the case where cardData is null if you
    * don't want the last card to be blank.
    */
-  renderCard: PropTypes.func.isRequired,
+  children: PropTypes.func.isRequired,
   /**
    * Restricts dragging to the horizontal movement only.
    * Can be useful if the cards for left and right swipes may
