@@ -51,14 +51,19 @@ _See component propTypes in the source code for additional usage info._
 | Props                   | type                                      | description                                                        | required | default |
 | :---------------------- | :---------------------------------------- | :----------------------------------------------------------------- | :------- | :------ |
 | getNextCardData         | func({first, left, right, previousCards}) | return value is passed to renderCard as cardData for the next card | required |
-| renderCard              | func(cardData)                            | function to render the card based on the data                      | required |
+| children                | func(cardData)                            | render prop to render the card based on the data                   | required |
 | preventVerticalDragging | bool                                      | enable/disable horizontal swiping                                  |          | true    |
 
 ### Swipe animation props
 
-| Props               | type   | description                | default   |
-| :------------------ | :----- | :------------------------- | :-------- |
-| horizontalThreshold | number | horizontal swipe threshold | width / 4 |
+| Props               | type   | description                 | default    |
+| :------------------ | :----- | :-------------------------- | :--------- |
+| horizontalThreshold | number | horizontal swipe threshold  | width / 4  |
+| verticalThreshold   | number | vertical swipe threshold    | height / 4 |
+| disableSwipeUp      | bool   | prevent upward swipes       | true       |
+| disableSwipeDown    | bool   | prevent downward swipes     | true       |
+| disableSwipeLeft    | bool   | prevent swipes to the left  | false      |
+| disableSwipeDown    | bool   | prevent swipes to the right | false      |
 
 ### Event callbacks
 
@@ -67,6 +72,8 @@ _See component propTypes in the source code for additional usage info._
 | onEndReached   | func | function to be called when all cards have been swiped                                  | () => {}                        |
 | onSwiped       | func | function to be called when a card is swiped. it receives the swiped card and direction | (cardData, {left, right}) => {} |
 | onSwipeAborted | func | function to be called when a card is released before reaching the threshold            | () => {}                        |
+| onSwipedUp     | func | function to be called when a card is swiped up. it receives the swiped card index      | (cardData) => {}                |
+| onSwipedDown   | func | function to be called when a card is swiped down. it receives the swiped card index    | (cardData) => {}                |
 | onSwipedLeft   | func | function to be called when a card is swiped left. it receives the swiped card index    | (cardData) => {}                |
 | onSwipedRight  | func | function to be called when a card is swiped right. it receives the swiped card index   | (cardData) => {}                |
 | onDragging     | func | function to be called while a card is being moved. it receives X and Y positions       | (x, y) => {}                    |
@@ -100,9 +107,7 @@ function MyDynamicSwiper() {
         renderCard={(card) =>
           card === null ? (
             <View style={styles.card}>
-              <Text style={styles.text}>
-                You've reached the end of the deck, pal.
-              </Text>
+              <Text style={styles.text}>This is the end of the deck, pal.</Text>
             </View>
           ) : (
             <View style={styles.card}>
