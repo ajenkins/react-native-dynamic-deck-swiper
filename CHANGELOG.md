@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.5
+
+- Bugfix: Set default prop for onSwipeAborted
+
 ## 0.0.4
 
 - Bugfixes for vertical swiping and better animations

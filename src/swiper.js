@@ -270,7 +270,7 @@ DynamicSwiper.defaultProps = {
   disableSwipeLeft: false,
   onEndReached: () => {},
   onSwiped: () => {},
-  onSwipedAborted: () => {},
+  onSwipeAborted: () => {},
   onSwipedLeft: () => {},
   onSwipedRight: () => {},
   onSwipedUp: () => {},
