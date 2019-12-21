@@ -48,11 +48,11 @@ _See component propTypes in the source code for additional usage info._
 
 ### Card props
 
-| Props                   | type                                      | description                                                        | required | default |
-| :---------------------- | :---------------------------------------- | :----------------------------------------------------------------- | :------- | :------ |
-| getNextCardData         | func({first, left, right, previousCards}) | return value is passed to renderCard as cardData for the next card | required |
-| children                | func(cardData)                            | render prop to render the card based on the data                   | required |
-| preventVerticalDragging | bool                                      | enable/disable horizontal swiping                                  |          | true    |
+| Props                   | type                                      | description                                                         | required | default |
+| :---------------------- | :---------------------------------------- | :------------------------------------------------------------------ | :------- | :------ |
+| getNextCardData         | func({first, left, right, previousCards}) | return value is passed to render prop as cardData for the next card | required |
+| children                | func(cardData)                            | render prop to render the card based on the data                    | required |
+| preventVerticalDragging | bool                                      | enable/disable horizontal swiping                                   |          | true    |
 
 ### Swipe animation props
 
