@@ -7,7 +7,7 @@ import {
   onPanResponderMove,
   validSwipe
 } from './panresponder';
-import styles from './styles';
+import triggerSwipeCallbacks from './swipe-callbacks';
 
 export const LEFT = 'left';
 export const RIGHT = 'right';
@@ -74,23 +74,6 @@ class DynamicSwiper extends React.Component {
 
   releaseHelper(gestureState) {
     if (validSwipe(this.props, gestureState.dx, gestureState.dy)) {
-      // Trigger callback functions
-      this.props.onSwiped(this.state.topCardData);
-      switch (this.state.swipeDirection) {
-        case UP:
-          this.props.onSwipedUp(this.state.topCardData);
-          break;
-        case DOWN:
-          this.props.onSwipedDown(this.state.topCardData);
-          break;
-        case LEFT:
-          this.props.onSwipedLeft(this.state.topCardData);
-          break;
-        case RIGHT:
-          this.props.onSwipedRight(this.state.topCardData);
-          break;
-      }
-
       // Animate swipe then update state
       Animated.spring(this.position, {
         toValue: calculateOffscreen(
@@ -100,17 +83,22 @@ class DynamicSwiper extends React.Component {
         ),
         overshootClamping: true
       }).start(() => {
+        const swipedCard = { ...this.state.topCardData };
+        const swipeDirection = this.state.swipeDirection;
         const newPreviousCards = [
           ...this.state.previousCards,
           this.state.topCardData
         ];
-        this.setState({
-          topCardData: this._getNextCardData({
-            swipeDirection: this.state.swipeDirection,
+        this.setState(
+          {
+            topCardData: this._getNextCardData({
+              swipeDirection,
+              previousCards: newPreviousCards
+            }),
             previousCards: newPreviousCards
-          }),
-          previousCards: newPreviousCards
-        });
+          },
+          () => triggerSwipeCallbacks(props, swipedCard, swipeDirection)
+        );
       });
     } else {
       // Swipe aborted

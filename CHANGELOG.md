@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.6
+
+- Bugfix: Call swipe callbacks after the top card has been updated
+
 ## 0.0.5
 
 - Bugfix: Set default prop for onSwipeAborted
