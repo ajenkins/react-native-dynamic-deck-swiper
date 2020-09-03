@@ -13,8 +13,9 @@ export default function App() {
           } else if (first) {
             return 'This is the first card. This is card #1.';
           } else {
-            return `You swiped to the ${swipeDirection}. This is card #${previousCards.length +
-              1}.`;
+            return `You swiped to the ${swipeDirection}. This is card #${
+              previousCards.length + 1
+            }.`;
           }
         }}
         preventVerticalDragging={false}

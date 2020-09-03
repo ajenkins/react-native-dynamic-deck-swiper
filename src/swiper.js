@@ -8,6 +8,7 @@ import {
   validSwipe
 } from './panresponder';
 import triggerSwipeCallbacks from './swipe-callbacks';
+import styles from './styles';
 
 export const LEFT = 'left';
 export const RIGHT = 'right';
@@ -97,7 +98,7 @@ class DynamicSwiper extends React.Component {
             }),
             previousCards: newPreviousCards
           },
-          () => triggerSwipeCallbacks(props, swipedCard, swipeDirection)
+          () => triggerSwipeCallbacks(this.props, swipedCard, swipeDirection)
         );
       });
     } else {

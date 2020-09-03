@@ -1,3 +1,5 @@
+import { UP, DOWN, LEFT, RIGHT } from './swiper';
+
 const triggerSwipeCallbacks = (
   { onSwiped, onSwipedUp, onSwipedDown, onSwipedLeft, onSwipedRight },
   swipedCard,
